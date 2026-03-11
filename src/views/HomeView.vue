@@ -2,14 +2,14 @@
   <div class="home">
     <!-- ── Hero ── -->
     <section class="hero">
-<!--      <div class="hero-emoji">🧠</div>-->
+      <div class="hero-emoji">🧠</div>
       <h1 class="hero-title">Comment pense une IA ?</h1>
       <p class="hero-subtitle">
         Découvre les réseaux de neurones en jouant ! <br />
-        Tu vas <strong>voir</strong> une IA apprendre à reconnaître des chats et des chiens
+        Tu vas <strong>voir</strong> une IA apprendre à reconnaître des chats et des chiens 🐱🐶
       </p>
       <RouterLink to="/simulator" class="btn btn-primary hero-cta">
-        Commencer l'aventure !
+        🚀 Commencer l'aventure !
       </RouterLink>
     </section>
 
@@ -19,28 +19,28 @@
       <div class="module-grid">
 
         <RouterLink to="/simulator" class="module-card" style="--accent: #FF6B6B">
-<!--          <div class="module-icon">🐱🐶</div>-->
+          <div class="module-icon">🐱🐶</div>
           <h3>Simulateur Chat / Chien</h3>
           <p>Joue le rôle d'un neurone et observe comment le réseau apprend !</p>
-          <span class="module-tag">Jouer !</span>
+          <span class="module-tag">4 manches</span>
         </RouterLink>
 
         <RouterLink to="/mnist" class="module-card" style="--accent: #4ECDC4">
-<!--          <div class="module-icon">✏️</div>-->
+          <div class="module-icon">✏️</div>
           <h3>Dessine un chiffre</h3>
           <p>Dessine un chiffre et regarde l'IA le deviner en temps réel !</p>
           <span class="module-tag coming">Bientôt</span>
         </RouterLink>
 
         <RouterLink to="/games" class="module-card" style="--accent: #A78BFA">
-<!--          <div class="module-icon">🎮</div>-->
+          <div class="module-icon">🎮</div>
           <h3>Mini-jeux CNN</h3>
           <p>Convolution, Pooling, ReLU… deviens expert en 3 mini-jeux !</p>
           <span class="module-tag coming">Bientôt</span>
         </RouterLink>
 
         <RouterLink to="/bio" class="module-card" style="--accent: #6BCB77">
-<!--          <div class="module-icon">🔬</div>-->
+          <div class="module-icon">🔬</div>
           <h3>Parallèle Biologique</h3>
           <p>Compare les neurones d'une fourmi, d'un humain et d'une IA !</p>
           <span class="module-tag coming">Bientôt</span>
@@ -50,31 +50,31 @@
     </section>
 
     <!-- ── L'essentiel en 3 étapes ── -->
-<!--    <section class="steps-section card">-->
-<!--      <h2 class="section-title" style="text-align:center">Comment fonctionne un réseau de neurones ?</h2>-->
-<!--      <div class="steps">-->
-<!--        <div class="step">-->
-<!--          <div class="step-num">1</div>-->
-<!--          <div class="step-emoji">👁️</div>-->
-<!--          <h4>Observer</h4>-->
-<!--          <p>Le réseau regarde des <strong>caractéristiques</strong> : moustaches, oreilles pointues, yeux ronds…</p>-->
-<!--        </div>-->
-<!--        <div class="step-arrow">→</div>-->
-<!--        <div class="step">-->
-<!--          <div class="step-num">2</div>-->
-<!--          <div class="step-emoji">⚖️</div>-->
-<!--          <h4>Peser</h4>-->
-<!--          <p>Chaque indice est multiplié par un <strong>poids</strong> — certains indices comptent plus que d'autres.</p>-->
-<!--        </div>-->
-<!--        <div class="step-arrow">→</div>-->
-<!--        <div class="step">-->
-<!--          <div class="step-num">3</div>-->
-<!--          <div class="step-emoji">📚</div>-->
-<!--          <h4>Apprendre</h4>-->
-<!--          <p>En cas d'erreur, on <strong>ajuste les poids</strong> pour que le réseau soit meilleur la prochaine fois.</p>-->
-<!--        </div>-->
-<!--      </div>-->
-<!--    </section>-->
+    <section class="steps-section card">
+      <h2 class="section-title" style="text-align:center">Comment fonctionne un réseau de neurones ?</h2>
+      <div class="steps">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-emoji">👁️</div>
+          <h4>Observer</h4>
+          <p>Le réseau regarde des <strong>caractéristiques</strong> : moustaches, oreilles pointues, yeux ronds…</p>
+        </div>
+        <div class="step-arrow">→</div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-emoji">⚖️</div>
+          <h4>Peser</h4>
+          <p>Chaque indice est multiplié par un <strong>poids</strong> — certains indices comptent plus que d'autres.</p>
+        </div>
+        <div class="step-arrow">→</div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <div class="step-emoji">📚</div>
+          <h4>Apprendre</h4>
+          <p>En cas d'erreur, on <strong>ajuste les poids</strong> pour que le réseau soit meilleur la prochaine fois.</p>
+        </div>
+      </div>
+    </section>
   </div>
 </template>
 
@@ -87,23 +87,8 @@ import { RouterLink } from 'vue-router'
 .hero {
   text-align: center;
   padding: 56px 20px 48px;
-  animation: fade-up 0.6s ease;
 }
-/*
-@keyframes fade-up {
-  from { opacity: 0; transform: translateY(20px); }
-  to   { opacity: 1; transform: translateY(0); }
-}
-.hero-emoji {
-  font-size: 72px;
-  animation: bounce 1.8s ease-in-out infinite;
-}
-@keyframes bounce {
-  0%, 100% { transform: translateY(0); }
-  50%       { transform: translateY(-10px); }
-}
-*/
-
+.hero-emoji { font-size: 72px; }
 .hero-title {
   font-family: 'Fredoka One', cursive;
   font-size: clamp(32px, 5vw, 56px);
@@ -133,8 +118,6 @@ import { RouterLink } from 'vue-router'
   grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
   gap: 20px;
 }
-
-/*Ajouter:   border: 2.5px solid transparent;*/
 .module-card {
   background: #fff;
   border-radius: var(--radius);
@@ -147,20 +130,16 @@ import { RouterLink } from 'vue-router'
   position: relative;
   overflow: hidden;
 }
-/*Ajouter: background: var(--accent);*/
 .module-card::before {
   content: '';
   position: absolute;
   top: 0; left: 0; right: 0;
   height: 5px;
-
+  background: var(--accent);
   border-radius: var(--radius) var(--radius) 0 0;
 }
-
-/*Ajouter: border-color: var(--accent);*/
 .module-card:hover {
-  transform: translateY(-4px);
-
+  border-color: var(--accent);
   box-shadow: 0 12px 32px rgba(0,0,0,0.12);
 }
 .module-icon { font-size: 44px; margin-bottom: 12px; }

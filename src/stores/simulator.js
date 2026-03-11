@@ -1,130 +1,64 @@
 import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
+import {
+  ROUNDS, CONNECTIONS, WEIGHTS_BY_ROUND,
+  INPUT_IDS, HIDDEN_IDS, OUTPUT_IDS,
+} from '../network/catDogNetwork.js'
 
-// ─── Poids (weight matrices) ────────────────────────────────────────────────
-// inputToHidden[h][e] = poids de l'entrée e vers le nœud caché h
-// Lignes = H1..H5, Colonnes = E1, E2, E3
+export { ROUNDS }
 
-const WEIGHTS_ROUND1 = {
-  inputToHidden: [
-    [2, 0, 0], // H1
-    [0, 0, 0], // H2
-    [0, 3, 2], // H3
-    [0, 0, 0], // H4
-    [2, 0, 0], // H5
-  ],
-  hiddenToOutput: [
-    [2, 0], // H1 → [CHAT, CHIEN]
-    [0, 0], // H2
-    [0, 2], // H3
-    [0, 0], // H4
-    [2, 0], // H5
-  ],
-}
+// ─── Calcul du réseau (pur JS, pas de Vue) ───────────────────────────────────
+// Travaille avec des IDs de nœuds et une map de poids sparse.
+// Ne connaît pas les matrices — uniquement des sommes sur les arêtes.
+//
+// Retourne : nodeStates — une map id → état
+//   entrées  : { value: 0|1, active: bool }
+//   cachés   : { sum: number, active: bool }
+//   sorties  : { score: number, winner: bool }
+export function computeNetworkState(inputValues, weights, threshold = 2) {
+  const nodeStates = {}
 
-const WEIGHTS_ROUND2 = {
-  inputToHidden: [
-    [2, 1, 1], // H1 — renforcé
-    [0, 0, 0], // H2
-    [0, 1, 2], // H3 — E2→H3 réduit de 3 à 1
-    [0, 0, 0], // H4
-    [2, 1, 1], // H5 — renforcé
-  ],
-  hiddenToOutput: [
-    [2, 0],
-    [0, 0],
-    [0, 2],
-    [0, 0],
-    [2, 0],
-  ],
-}
-
-// ─── Définition des 4 manches ─────────────────────────────────────────────
-export const ROUNDS = [
-  {
-    id: 1,
-    title: "Manche 1 — L'erreur",
-    subtitle: 'Le réseau a de mauvais réglages… il va se tromper !',
-    card: 'chat-ambigu',
-    cardLabel: 'Chat ambigu',
-    cardEmoji: '🐱',
-    inputs: [0, 1, 1], // E1=Moustaches, E2=Oreilles, E3=Yeux
-    weights: WEIGHTS_ROUND1,
-    expectedAnswer: 'CHAT',
-    learningNote: null,
-    // color: '#FF6B6B',
-  },
-  {
-    id: 2,
-    title: "Manche 2 — L'apprentissage",
-    subtitle: 'On ajuste les poids… regarde le réseau apprendre !',
-    card: 'chat-ambigu',
-    cardLabel: 'Chat ambigu',
-    cardEmoji: '🐱',
-    inputs: [0, 1, 1],
-    weights: WEIGHTS_ROUND2,
-    expectedAnswer: 'CHAT',
-    learningNote: [
-      'E2→H3 : 3 → 1 (oreilles pointues moins importantes pour chien)',
-      'E2→H1 : 0 → 1 et E3→H1 : 0 → 1 (renforcement chat)',
-      'E2→H5 : 0 → 1 et E3→H5 : 0 → 1 (renforcement chat)',
-    ],
-    // color: '#4ECDC4',
-  },
-  {
-    id: 3,
-    title: 'Manche 3 — Généralisation',
-    subtitle: 'Nouvelle image ! Le réseau va-t-il reconnaître ce chat ?',
-    card: 'chat-clair',
-    cardLabel: 'Chat non ambigu',
-    cardEmoji: '🐱',
-    inputs: [1, 1, 1],
-    weights: WEIGHTS_ROUND2,
-    expectedAnswer: 'CHAT',
-    learningNote: null,
-    // color: '#6BCB77',
-  },
-  {
-    id: 4,
-    title: 'Manche 4 — Généralisation',
-    subtitle: 'Et ce chien… le réseau le reconnaît-il ?',
-    card: 'chien-clair',
-    cardLabel: 'Chien non ambigu',
-    cardEmoji: '🐶',
-    inputs: [0, 0, 1],
-    weights: WEIGHTS_ROUND2,
-    expectedAnswer: 'CHIEN',
-    learningNote: null,
-    // color: '#FF9F43',
-  },
-]
-
-// ─── Calcul du réseau ────────────────────────────────────────────────────────
-export function computeNetwork(inputs, weights) {
-  const THRESHOLD = 2
-
-  const hiddenState = weights.inputToHidden.map((row, hi) => {
-    const sum = row.reduce((acc, w, ei) => acc + w * inputs[ei], 0)
-    return { index: hi, label: `H${hi + 1}`, sum, active: sum >= THRESHOLD }
+  // 1. États des entrées
+  INPUT_IDS.forEach(id => {
+    const value = inputValues[id] ?? 0
+    nodeStates[id] = { value, active: value === 1 }
   })
 
-  const outputScores = [0, 0] // [CHAT, CHIEN]
-  hiddenState.forEach((h) => {
-    if (h.active) {
-      weights.hiddenToOutput[h.index].forEach((w, oi) => {
-        outputScores[oi] += w
-      })
-    }
+  // 2. États des nœuds cachés
+  HIDDEN_IDS.forEach(id => {
+    const sum = CONNECTIONS
+      .filter(c => c.to === id)
+      .reduce((acc, c) => {
+        const w = weights[`${c.from}->${c.to}`] ?? 0
+        return acc + (nodeStates[c.from]?.active ? w : 0)
+      }, 0)
+    nodeStates[id] = { sum, active: sum >= threshold }
   })
 
-  const prediction =
-      outputScores[0] > outputScores[1]
-          ? 'CHAT'
-          : outputScores[1] > outputScores[0]
-              ? 'CHIEN'
-              : 'EGALITE'
+  // 3. Scores des sorties
+  OUTPUT_IDS.forEach(id => {
+    const score = CONNECTIONS
+      .filter(c => c.to === id)
+      .reduce((acc, c) => {
+        const w = weights[`${c.from}->${c.to}`] ?? 0
+        return acc + (nodeStates[c.from]?.active ? w : 0)
+      }, 0)
+    nodeStates[id] = { score, winner: false }
+  })
 
-  return { hiddenState, outputScores, prediction }
+  // 4. Prédiction
+  const scores    = OUTPUT_IDS.map(id => nodeStates[id].score)
+  const maxScore  = Math.max(...scores)
+  const winnerIdx = scores.indexOf(maxScore)
+  const prediction = scores.filter(s => s === maxScore).length === 1
+    ? OUTPUT_IDS[winnerIdx]
+    : 'EGALITE'
+
+  if (prediction !== 'EGALITE') {
+    nodeStates[prediction].winner = true
+  }
+
+  return { nodeStates, prediction }
 }
 
 // ─── Store Pinia ─────────────────────────────────────────────────────────────
@@ -132,15 +66,20 @@ export const useSimulatorStore = defineStore('simulator', () => {
   const currentRoundIndex = ref(0)
   const result = ref(null)
 
-  const currentRound = computed(() => ROUNDS[currentRoundIndex.value])
+  const currentRound   = computed(() => ROUNDS[currentRoundIndex.value])
+  const currentWeights = computed(() => WEIGHTS_BY_ROUND[currentRoundIndex.value])
 
-  const networkResult = computed(() => {
-    const r = currentRound.value
-    return computeNetwork(r.inputs, r.weights)
-  })
+  const networkResult = computed(() =>
+    computeNetworkState(currentRound.value.inputs, currentWeights.value)
+  )
 
-  function runAnimation() {
+  function compute() {
     result.value = networkResult.value
+  }
+
+  // Calcule depuis des entrées fournies (ex : saisie utilisateur validée)
+  function computeWith(inputs) {
+    result.value = computeNetworkState(inputs, currentWeights.value)
   }
 
   function reset() {
@@ -153,26 +92,16 @@ export const useSimulatorStore = defineStore('simulator', () => {
   }
 
   function nextRound() {
-    if (currentRoundIndex.value < ROUNDS.length - 1) {
-      goToRound(currentRoundIndex.value + 1)
-    }
+    if (currentRoundIndex.value < ROUNDS.length - 1) goToRound(currentRoundIndex.value + 1)
   }
 
   function prevRound() {
-    if (currentRoundIndex.value > 0) {
-      goToRound(currentRoundIndex.value - 1)
-    }
+    if (currentRoundIndex.value > 0) goToRound(currentRoundIndex.value - 1)
   }
 
   return {
-    currentRoundIndex,
-    currentRound,
-    result,
-    networkResult,
-    runAnimation,
-    reset,
-    goToRound,
-    nextRound,
-    prevRound,
+    currentRoundIndex, currentRound, currentWeights,
+    result, networkResult,
+    compute, computeWith, reset, goToRound, nextRound, prevRound,
   }
 })

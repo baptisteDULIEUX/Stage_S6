@@ -1,124 +1,131 @@
-git <template>
+<template>
   <div class="graph-wrapper">
     <svg
-        viewBox="0 0 720 640"
-        width="100%"
-        xmlns="http://www.w3.org/2000/svg"
-        class="network-svg"
+      :viewBox="`0 0 ${svgWidth} ${svgHeight}`"
+      width="100%"
+      xmlns="http://www.w3.org/2000/svg"
     >
-      <!-- ══ 1. Arêtes Entrées → Cachés ══ -->
-      <g class="edges-layer">
-        <g v-for="edge in inputToHiddenEdges" :key="edge.id">
-          <path
-              :d="edge.path"
-              class="edge-base"
-              :class="{
-              'edge-zero':   edge.weight === 0,
-              'edge-active': computed_result && edge.weight > 0 && isInputActive(edge.inputIdx),
-            }"
-              fill="none"
-              :stroke="computed_result && edge.weight > 0 && isInputActive(edge.inputIdx)
-              ? inputColors[edge.inputIdx] : undefined"
-              :stroke-width="edge.weight === 0 ? 1 : Math.max(1.5, edge.weight * 0.8)"
-          />
-          <text
-              v-if="edge.weight > 0"
-              :x="edge.midX"
-              :y="edge.midY - 6"
-              class="edge-label"
-              :fill="inputColors[edge.inputIdx]"
-          >{{ edge.weight }}</text>
-        </g>
-      </g>
+      <!-- ══ ARÊTES ══════════════════════════════════════════════════════════ -->
+      <g v-for="edge in edges" :key="edge.id">
 
-      <!-- ══ 2. Arêtes Cachés → Sorties ══ -->
-      <g class="edges-layer">
-        <g v-for="edge in hiddenToOutputEdges" :key="edge.id">
-          <path
-              :d="edge.path"
-              class="edge-base"
-              :class="{
-              'edge-zero':   edge.weight === 0,
-              'edge-active': computed_result && edge.weight > 0 && isHiddenActive(edge.hiddenIdx),
-            }"
-              fill="none"
-              :stroke="computed_result && edge.weight > 0 && isHiddenActive(edge.hiddenIdx)
-              ? outputColors[edge.outputIdx] : undefined"
-              :stroke-width="edge.weight === 0 ? 1 : 2.5"
-          />
-          <text
-              v-if="edge.weight > 0"
-              :x="edge.midX"
-              :y="edge.midY - 6"
-              class="edge-label"
-              :fill="outputColors[edge.outputIdx]"
-          >{{ edge.weight }}</text>
-        </g>
-      </g>
-
-      <!-- ══ 3. Nœuds Entrées ══ -->
-      <g v-for="(node, i) in inputNodes" :key="node.id">
-        <ellipse
-            :cx="node.x" :cy="node.y"
-            rx="68" ry="36"
-            class="node-input"
-            :style="inputs[i] === 1 ? `fill: ${inputColors[i]}22; stroke: ${inputColors[i]}` : ''"
+        <path
+          :d="edge.path"
+          fill="none"
+          :stroke="edgeStroke(edge)"
+          :stroke-width="edge.weight === 0 ? 1 : Math.max(1.5, edge.weight * 0.7)"
+          :stroke-dasharray="edge.weight === 0 ? '5 4' : undefined"
+          :opacity="edge.weight === 0 ? 0.3 : 1"
         />
-        <text :x="node.x" :y="node.y - 8" class="node-emoji">{{ node.emoji }}</text>
-        <text :x="node.x" :y="node.y + 10" class="node-label-input">{{ node.label }}</text>
-        <circle :cx="node.x + 60" :cy="node.y - 26" r="14"
-                :style="inputs[i] === 1 ? 'fill:#FFE66D' : 'fill:#e0e0e0'" />
-        <text :x="node.x + 60" :y="node.y - 21" class="badge-text">{{ inputs[i] }}</text>
-      </g>
 
-      <!-- ══ 4. Nœuds Cachés ══ -->
-      <g v-for="(node, i) in hiddenNodes" :key="node.id">
-        <circle
-            :cx="node.x" :cy="node.y" r="28"
-            class="node-hidden"
-            :class="{
-            'node-hidden-active':   computed_result && hiddenState[i]?.active,
-            'node-hidden-inactive': computed_result && !hiddenState[i]?.active,
-          }"
-        />
-        <text :x="node.x" :y="node.y - 4" class="node-label-hidden">{{ node.id }}</text>
+        <!-- Label du poids (seulement si > 0) -->
         <text
-            v-if="computed_result"
-            :x="node.x" :y="node.y + 12"
-            class="node-sum"
-            :fill="hiddenState[i]?.active ? '#fff' : '#aaa'"
-        >{{ hiddenState[i]?.sum }}</text>
+          v-if="edge.weight > 0"
+          :x="edge.midX" :y="edge.midY - 7"
+          class="edge-label"
+          :fill="edgeLabelColor(edge)"
+        >{{ edge.weight }}</text>
+
       </g>
 
-      <!-- ══ 5. Nœuds Sortie ══ -->
-      <g v-for="(node, i) in outputNodes" :key="node.id">
+      <!-- ══ NŒUDS ═══════════════════════════════════════════════════════════ -->
+
+      <!-- ── Entrées ──────────────────────────────────────────────────────── -->
+      <g
+        v-for="id in nodesOfType('input')" :key="id"
+        class="input-node-group"
+        :class="{ 'input-node-disabled': !canToggle }"
+        @click="canToggle && emit('toggle-input', id)"
+      >
+        <!-- Zone de clic invisible légèrement plus grande que l'ellipse -->
         <ellipse
-            :cx="node.x" :cy="node.y"
-            rx="58" ry="34"
-            class="node-output"
-            :class="{
-            'node-output-winner': computed_result && result?.prediction === node.id,
-            'node-output-loser':  computed_result && result?.prediction !== node.id,
-          }"
-            :style="computed_result && result?.prediction === node.id
-            ? `fill: ${outputColors[i]}33; stroke: ${outputColors[i]}; stroke-width: 3` : ''"
+          :cx="pos(id).x" :cy="pos(id).y"
+          :rx="S.input.rx + 6" :ry="S.input.ry + 6"
+          fill="transparent" stroke="none"
         />
-        <text :x="node.x" :y="node.y - 6" class="node-emoji">{{ node.emoji }}</text>
-        <text :x="node.x" :y="node.y + 12" class="node-label-output">{{ node.id }}</text>
-        <g v-if="computed_result">
-          <circle :cx="node.x + 48" :cy="node.y - 28" r="16"
-                  :style="`fill: ${outputColors[i]}`" />
-          <text :x="node.x + 48" :y="node.y - 22" class="score-text">
-            {{ result?.outputScores[i] }}
-          </text>
+        <ellipse
+          :cx="pos(id).x" :cy="pos(id).y"
+          :rx="S.input.rx" :ry="S.input.ry"
+          :fill="inputFill(id)"
+          :stroke="nodes[id].color ?? '#d1d5db'"
+          :stroke-width="isActive(id) ? 2.5 : 1.5"
+        />
+        <!-- Hint "clique-moi" quand pas encore calculé -->
+        <text
+          v-if="canToggle"
+          :x="pos(id).x" :y="pos(id).y - 22"
+          class="node-hint"
+        >cliquer</text>
+        <text :x="pos(id).x" :y="pos(id).y - 7"  class="node-emoji">{{ nodes[id].emoji }}</text>
+        <text :x="pos(id).x" :y="pos(id).y + 12" class="node-label-small">{{ nodes[id].label }}</text>
+        <!-- Badge 0 / 1 -->
+        <circle
+          :cx="pos(id).x + S.input.rx - 10" :cy="pos(id).y - S.input.ry + 10" r="13"
+          :fill="isActive(id) ? '#FFE66D' : '#e5e7eb'"
+        />
+        <text
+          :x="pos(id).x + S.input.rx - 10" :y="pos(id).y - S.input.ry + 15"
+          class="badge-text"
+        >{{ ns(id)?.value ?? 0 }}</text>
+      </g>
+
+      <!-- ── Couches cachées ───────────────────────────────────────────────── -->
+      <g v-for="id in nodesOfType('hidden')" :key="id">
+        <circle
+          :cx="pos(id).x" :cy="pos(id).y" :r="S.hidden.r"
+          :fill="hiddenFill(id)"
+          :stroke="isActive(id) ? '#38a169' : '#9ca3af'"
+          :stroke-width="isActive(id) ? 2.5 : 1.5"
+        />
+        <!-- Décale le label vers le haut quand la somme est affichée -->
+        <text
+          :x="pos(id).x"
+          :y="showState && ns(id)?.sum !== undefined ? pos(id).y - 5 : pos(id).y + 5"
+          class="node-label-hidden"
+          :fill="isActive(id) ? '#fff' : '#374151'"
+        >{{ id }}</text>
+        <text
+          v-if="showState && ns(id)?.sum !== undefined"
+          :x="pos(id).x" :y="pos(id).y + 10"
+          class="node-sum"
+          :fill="isActive(id) ? '#e0fce8' : '#9ca3af'"
+        >Σ={{ ns(id).sum }}</text>
+      </g>
+
+      <!-- ── Sorties ───────────────────────────────────────────────────────── -->
+      <g v-for="id in nodesOfType('output')" :key="id">
+        <ellipse
+          :cx="pos(id).x" :cy="pos(id).y"
+          :rx="S.output.rx" :ry="S.output.ry"
+          :fill="outputFill(id)"
+          :stroke="nodes[id].color ?? '#d1d5db'"
+          :stroke-width="isWinner(id) ? 3 : 1.5"
+          :opacity="showState && !isWinner(id) ? 0.4 : 1"
+        />
+        <text :x="pos(id).x" :y="pos(id).y - 6"  class="node-emoji">{{ nodes[id].emoji }}</text>
+        <text :x="pos(id).x" :y="pos(id).y + 12" class="node-label-output">{{ nodes[id].label ?? id }}</text>
+        <!-- Badge score -->
+        <g v-if="showState">
+          <circle
+            :cx="pos(id).x + S.output.rx - 8" :cy="pos(id).y - S.output.ry + 10" r="14"
+            :fill="nodes[id].color ?? '#888'"
+          />
+          <text
+            :x="pos(id).x + S.output.rx - 8" :y="pos(id).y - S.output.ry + 15"
+            class="badge-text" fill="#fff"
+          >{{ ns(id)?.score ?? 0 }}</text>
         </g>
       </g>
 
-      <!-- ══ 6. Légende seuil ══ -->
-      <g v-if="computed_result">
-        <rect x="270" y="598" width="180" height="28" rx="14"
-              fill="#fff" stroke="#ccc" stroke-width="1" />
-        <text x="360" y="617" class="legend-text">Seuil d'activation : ≥ 2</text>
+      <!-- ══ LÉGENDE SEUIL ═══════════════════════════════════════════════════ -->
+      <g v-if="showState">
+        <rect
+          :x="svgWidth / 2 - 90" :y="svgHeight - 30"
+          width="180" height="24" rx="12"
+          fill="#fff" stroke="#e5e7eb"
+        />
+        <text :x="svgWidth / 2" :y="svgHeight - 13" class="legend-text">
+          Seuil d'activation : Σ ≥ {{ threshold }}
+        </text>
       </g>
     </svg>
   </div>
@@ -126,148 +133,112 @@ git <template>
 
 <script setup>
 import { computed } from 'vue'
+import {
+  computePositions,
+  computeEdges,
+  deriveNodeTypes,
+  NODE_SIZES,
+} from '../composables/useNetworkLayout.js'
 
+// ─── Props & emits ────────────────────────────────────────────────────────────
 const props = defineProps({
-  inputs:      { type: Array,  default: () => [0, 0, 0] },
-  weights:     { type: Object, required: true },
-  hiddenState: { type: Array,  default: () => [] },
-  result:      { type: Object, default: null },
+  layerOrder:  { type: Array,  required: true },
+  nodes:       { type: Object, required: true },
+  connections: { type: Array,  required: true },
+  weights:     { type: Object, default: () => ({}) },
+  nodeStates:  { type: Object, default: null },
+  threshold:   { type: Number, default: 2 },
+  svgWidth:    { type: Number, default: 720 },
+  svgHeight:   { type: Number, default: 620 },
+  // Quand true : les nœuds d'entrée sont cliquables
+  canToggle:   { type: Boolean, default: false },
 })
 
-// Tout s'affiche dès que result est disponible
-const computed_result = computed(() => !!props.result)
+const emit = defineEmits(['toggle-input'])
 
-// ── Helpers ───────────────────────────────────────────────────────────────────
-const isInputActive  = (idx) => props.inputs[idx] === 1
-const isHiddenActive = (idx) => props.hiddenState[idx]?.active
+// ─── Layout ───────────────────────────────────────────────────────────────────
+const positions  = computed(() => computePositions(props.layerOrder, props.nodes, props.svgWidth, props.svgHeight))
+const nodeTypes  = computed(() => deriveNodeTypes(props.layerOrder, props.nodes))
+const edges      = computed(() => computeEdges(props.connections, props.weights, positions.value, nodeTypes.value))
 
-// ── Palette ───────────────────────────────────────────────────────────────────
-const inputColors  = ['#FF6B6B', '#4ECDC4', '#A78BFA']   // E1, E2, E3
-const outputColors = ['#F59E0B', '#3B82F6']                // CHAT, CHIEN
+// ─── Raccourcis ───────────────────────────────────────────────────────────────
+const S         = NODE_SIZES                          // alias court pour le template
+const showState = computed(() => !!props.nodeStates)
+const pos       = (id) => positions.value[id]
+const ns        = (id) => props.nodeStates?.[id]      // nodeState
 
-// ── Positions des nœuds ───────────────────────────────────────────────────────
-const inputNodes = [
-  { id: 'E1', label: 'Moustaches',     emoji: '', x: 100, y: 140 },
-  { id: 'E2', label: 'Oreilles ptues', emoji: '', x: 100, y: 320 },
-  { id: 'E3', label: 'Yeux ronds',     emoji: '', x: 100, y: 500 },
-]
+// Nœuds groupés par type (pour itérer dans le template dans le bon ordre)
+const nodesOfType = (type) => computed(() =>
+  props.layerOrder
+    .flatMap(layerId =>
+      Object.entries(props.nodes)
+        .filter(([, n]) => n.layer === layerId)
+        .map(([id]) => id)
+    )
+    .filter(id => nodeTypes.value[id] === type)
+).value
 
-const hiddenNodes = [
-  { id: 'H1', x: 330, y: 90  },
-  { id: 'H2', x: 330, y: 210 },
-  { id: 'H3', x: 330, y: 330 },
-  { id: 'H4', x: 330, y: 450 },
-  { id: 'H5', x: 330, y: 570 },
-]
+// ─── État des nœuds ──────────────────────────────────────────────────────────
+const isActive = (id) => showState.value && (ns(id)?.active ?? false)
+const isWinner = (id) => showState.value && (ns(id)?.winner === true)
 
-const outputNodes = [
-  { id: 'CHAT',  emoji: '', x: 590, y: 220 },
-  { id: 'CHIEN', emoji: '', x: 590, y: 440 },
-]
-
-// ── Construction des chemins SVG (cubique bezier) ────────────────────────────
-function makePath(x1, y1, x2, y2) {
-  const dx = x2 - x1
-  return `M ${x1} ${y1} C ${x1 + dx * 0.45} ${y1}, ${x2 - dx * 0.45} ${y2}, ${x2} ${y2}`
+// ─── Couleurs des arêtes ─────────────────────────────────────────────────────
+function isEdgeActive(edge) {
+  return showState.value && edge.weight > 0 && ns(edge.from)?.active
+}
+function edgeStroke(edge) {
+  return isEdgeActive(edge)
+    ? (props.nodes[edge.from]?.color ?? '#888')
+    : '#d1d5db'
+}
+function edgeLabelColor(edge) {
+  // Labels H→sortie colorés par la destination
+  if (nodeTypes.value[edge.to] === 'output') return props.nodes[edge.to]?.color ?? '#374151'
+  return props.nodes[edge.from]?.color ?? '#374151'
 }
 
-function midPoint(x1, y1, x2, y2) {
-  return { x: (x1 + x2) / 2, y: (y1 + y2) / 2 }
+// ─── Remplissages des nœuds ───────────────────────────────────────────────────
+function inputFill(id) {
+  if (!isActive(id)) return '#f9fafb'
+  return (props.nodes[id]?.color ?? '#e5e7eb') + '22'
 }
-
-// Arêtes Entrées → Cachés
-const inputToHiddenEdges = computed(() => {
-  const edges = []
-  inputNodes.forEach((inp, ei) => {
-    hiddenNodes.forEach((hid, hi) => {
-      const weight = props.weights.inputToHidden[hi][ei]
-      const mid = midPoint(inp.x + 68, inp.y, hid.x - 28, hid.y)
-      edges.push({
-        id:       `e-${ei}-${hi}`,
-        inputIdx:  ei,
-        hiddenIdx: hi,
-        weight,
-        path:    makePath(inp.x + 68, inp.y, hid.x - 28, hid.y),
-        midX:    mid.x,
-        midY:    mid.y,
-      })
-    })
-  })
-  return edges
-})
-
-// Arêtes Cachés → Sorties
-const hiddenToOutputEdges = computed(() => {
-  const edges = []
-  hiddenNodes.forEach((hid, hi) => {
-    outputNodes.forEach((out, oi) => {
-      const weight = props.weights.hiddenToOutput[hi][oi]
-      const mid = midPoint(hid.x + 28, hid.y, out.x - 58, out.y)
-      edges.push({
-        id:        `h-${hi}-${oi}`,
-        hiddenIdx:  hi,
-        outputIdx:  oi,
-        weight,
-        path:     makePath(hid.x + 28, hid.y, out.x - 58, out.y),
-        midX:     mid.x,
-        midY:     mid.y,
-      })
-    })
-  })
-  return edges
-})
+function hiddenFill(id) {
+  return isActive(id) ? '#6BCB77' : '#f3f4f6'
+}
+function outputFill(id) {
+  if (!showState.value) return '#f9fafb'
+  if (isWinner(id)) return (props.nodes[id]?.color ?? '#e5e7eb') + '28'
+  return '#f9fafb'
+}
 </script>
 
 <style scoped>
-.graph-wrapper {
-  background: #fafafa;
-  border-radius: 20px;
-  padding: 8px;
-}
+.graph-wrapper { background: #fafafa; border-radius: 20px; padding: 8px; }
 
-/* ── Arêtes ── */
-.edge-base  { stroke: #d1d5db; }
-.edge-zero  { stroke: #e9ecef; stroke-dasharray: 4 4; }
-.edge-active { stroke-linecap: round; }
-
-/* ── Labels arêtes ── */
 .edge-label {
   font-family: 'Nunito', sans-serif;
-  font-size: 13px;
-  font-weight: 800;
+  font-size: 13px; font-weight: 800;
+  text-anchor: middle; pointer-events: none;
+}
+.node-emoji        { font-size: 18px; text-anchor: middle; dominant-baseline: middle; pointer-events: none; }
+.node-label-small  { font-family: 'Nunito', sans-serif; font-size: 11px; font-weight: 700; fill: #374151; text-anchor: middle; pointer-events: none; }
+.node-label-hidden { font-family: 'Fredoka One', cursive; font-size: 14px; text-anchor: middle; dominant-baseline: middle; }
+.node-label-output { font-family: 'Fredoka One', cursive; font-size: 13px; fill: #374151; text-anchor: middle; }
+.node-sum          { font-family: 'Nunito', sans-serif; font-size: 11px; font-weight: 800; text-anchor: middle; }
+.badge-text        { font-family: 'Fredoka One', cursive; font-size: 13px; text-anchor: middle; dominant-baseline: middle; }
+.legend-text       { font-family: 'Nunito', sans-serif; font-size: 12px; fill: #6b7280; text-anchor: middle; }
+
+/* ── Nœuds d'entrée interactifs ── */
+.input-node-group           { cursor: pointer; }
+.input-node-group:hover ellipse:nth-child(2) { filter: brightness(0.94); }
+.input-node-disabled        { cursor: default; }
+.input-node-disabled:hover ellipse:nth-child(2) { filter: none; }
+
+.node-hint {
+  font-family: 'Nunito', sans-serif;
+  font-size: 10px;
+  fill: #9ca3af;
   text-anchor: middle;
   pointer-events: none;
 }
-
-/* ── Nœuds Entrées ── */
-.node-input { stroke: #d1d5db; stroke-width: 2; fill: #f3f4f6; }
-
-/* ── Nœuds Cachés ── */
-.node-hidden         { stroke: #9ca3af;  stroke-width: 2;   fill: #f3f4f6; }
-.node-hidden-active  { fill: #6BCB77;    stroke: #38a169;   stroke-width: 3; }
-.node-hidden-inactive{ fill: #f3f4f6;    stroke: #d1d5db;   stroke-width: 1.5; }
-
-/* ── Nœuds Sortie ── */
-.node-output        { stroke: #d1d5db; stroke-width: 2; fill: #f9fafb; }
-.node-output-winner { stroke-width: 3; }
-.node-output-loser  { opacity: 0.4; }
-
-/* ── Textes ── */
-.node-emoji { font-size: 20px; text-anchor: middle; pointer-events: none; }
-.node-label-input {
-  font-family: 'Nunito', sans-serif;
-  font-size: 12px; font-weight: 700; fill: #374151; text-anchor: middle;
-}
-.node-label-hidden {
-  font-family: 'Fredoka One', cursive;
-  font-size: 16px; fill: #374151; text-anchor: middle;
-}
-.node-label-output {
-  font-family: 'Fredoka One', cursive;
-  font-size: 14px; fill: #374151; text-anchor: middle;
-}
-.node-sum   { font-family: 'Nunito', sans-serif; font-size: 13px; font-weight: 900; text-anchor: middle; }
-.badge-text { font-family: 'Fredoka One', cursive; font-size: 14px; fill: #374151; text-anchor: middle; }
-.score-text { font-family: 'Fredoka One', cursive; font-size: 15px; fill: #fff; text-anchor: middle; }
-.legend-text{ font-family: 'Nunito', sans-serif; font-size: 12px; fill: #6b7280; text-anchor: middle; }
 </style>

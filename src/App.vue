@@ -3,34 +3,30 @@
     <!-- ── Navigation ── -->
     <nav class="navbar">
       <RouterLink to="/" class="nav-brand">
-        <span>loraine ipsum</span>
+        🧠 <span>NeuralKids</span>
       </RouterLink>
       <div class="nav-links">
         <RouterLink to="/" class="nav-item" active-class="nav-active" exact>
-           Accueil
+          🏠 Accueil
         </RouterLink>
         <RouterLink to="/simulator" class="nav-item" active-class="nav-active">
-          Simulateur
+          🐱 Simulateur
         </RouterLink>
         <RouterLink to="/mnist" class="nav-item" active-class="nav-active">
-          Dessin IA
+          ✏️ Dessin IA
         </RouterLink>
         <RouterLink to="/games" class="nav-item" active-class="nav-active">
-          Mini-jeux
+          🎮 Mini-jeux
         </RouterLink>
         <RouterLink to="/bio" class="nav-item" active-class="nav-active">
-          Biologie
+          🔬 Biologie
         </RouterLink>
       </div>
     </nav>
 
     <!-- ── Contenu ── -->
     <main class="main-content">
-      <RouterView v-slot="{ Component }">
-        <Transition name="page" mode="out-in">
-          <component :is="Component" />
-        </Transition>
-      </RouterView>
+      <RouterView />
     </main>
 
     <!-- ── Footer ── -->
@@ -165,8 +161,7 @@ html, body {
   align-items: center;
   gap: 8px;
 }
-.btn:hover:not(:disabled) { transform: translateY(-2px) scale(1.03); box-shadow: 0 8px 20px rgba(0,0,0,0.15); }
-.btn:active:not(:disabled) { transform: scale(0.97); }
+.btn:hover:not(:disabled) { box-shadow: 0 8px 20px rgba(0,0,0,0.15); }
 .btn:disabled { opacity: 0.5; cursor: not-allowed; }
 .btn-primary  { background: var(--coral);  color: #fff; }
 .btn-teal     { background: var(--teal);   color: #fff; }

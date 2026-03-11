@@ -8,35 +8,35 @@
     </p>
 
     <!-- Frise comparative -->
-<!--    <div class="compare-grid">-->
-<!--      <div v-for="entity in entities" :key="entity.name"-->
-<!--        class="entity-card"-->
-<!--        :style="`&#45;&#45;c: ${entity.color}`"-->
-<!--      >-->
-<!--        <div class="entity-emoji">{{ entity.emoji }}</div>-->
-<!--        <h3 class="entity-name">{{ entity.name }}</h3>-->
-<!--        <div class="entity-count">{{ entity.count }}</div>-->
-<!--        <div class="entity-label">neurones</div>-->
-<!--        &lt;!&ndash; Barre proportionnelle logarithmique &ndash;&gt;-->
-<!--        <div class="bar-wrap">-->
-<!--          <div class="bar-fill" :style="`width: ${entity.barPct}%`" />-->
-<!--        </div>-->
-<!--        <p class="entity-skill">{{ entity.skill }}</p>-->
-<!--      </div>-->
-<!--    </div>-->
+    <div class="compare-grid">
+      <div v-for="entity in entities" :key="entity.name"
+        class="entity-card"
+        :style="`--c: ${entity.color}`"
+      >
+        <div class="entity-emoji">{{ entity.emoji }}</div>
+        <h3 class="entity-name">{{ entity.name }}</h3>
+        <div class="entity-count">{{ entity.count }}</div>
+        <div class="entity-label">neurones</div>
+        <!-- Barre proportionnelle logarithmique -->
+        <div class="bar-wrap">
+          <div class="bar-fill" :style="`width: ${entity.barPct}%`" />
+        </div>
+        <p class="entity-skill">{{ entity.skill }}</p>
+      </div>
+    </div>
 
-<!--    &lt;!&ndash; Note pédagogique &ndash;&gt;-->
-<!--    <div class="note-box card">-->
-<!--      <h3>💡 Ce que cela veut dire</h3>-->
-<!--      <p>-->
-<!--        Un réseau de neurones artificiel n'a que ~1 000 connexions pour reconnaître des chiffres,-->
-<!--        là où votre cerveau en a <strong>86 milliards</strong> pour tout ce que vous faites-->
-<!--        (parler, ressentir, créer…). L'IA n'est donc pas « intelligente comme nous »,-->
-<!--        mais <em>très efficace</em> pour une tâche précise.-->
-<!--      </p>-->
-<!--    </div>-->
+    <!-- Note pédagogique -->
+    <div class="note-box card">
+      <h3>💡 Ce que cela veut dire</h3>
+      <p>
+        Un réseau de neurones artificiel n'a que ~1 000 connexions pour reconnaître des chiffres,
+        là où votre cerveau en a <strong>86 milliards</strong> pour tout ce que vous faites
+        (parler, ressentir, créer…). L'IA n'est donc pas « intelligente comme nous »,
+        mais <em>très efficace</em> pour une tâche précise.
+      </p>
+    </div>
 
-    <div class="coming-badge">Frise en cours de développement</div>
+    <div class="coming-badge">🚧 Frise animée — En cours de développement</div>
   </div>
 </template>
 
