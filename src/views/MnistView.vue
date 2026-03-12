@@ -118,9 +118,9 @@ import { ref, computed, onMounted } from 'vue'
 import DrawingCanvas   from '../components/DrawingCanvas.vue'
 import PredictionBars  from '../components/PredictionBars.vue'
 import FeatureMapGrid  from '../components/FeatureMapGrid.vue'
-import { useMnistModel } from '../composables/useMnistModel.js'
+import { useDoodleModel } from '../composables/useDoodleModel'
 
-const model        = useMnistModel()
+const model        = useDoodleModel()
 const drawingCanvas = ref(null)
 
 // Charger le modèle au montage

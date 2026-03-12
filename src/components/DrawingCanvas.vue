@@ -55,7 +55,7 @@ let   lastY     = 0
 
 // ─── Initialisation du canvas ─────────────────────────────────────────────────
 onMounted(() => {
-  const ctx = canvasEl.value.getContext('2d')
+  const ctx = canvasEl.value.getContext('2d', { willReadFrequently: true })
   ctx.fillStyle = '#000'       // fond noir (comme MNIST)
   ctx.fillRect(0, 0, props.size, props.size)
   ctx.strokeStyle = '#fff'     // trait blanc
@@ -82,7 +82,7 @@ function startDraw(e) {
   lastX = x
   lastY = y
   // Point unique pour un simple clic
-  const ctx = canvasEl.value.getContext('2d')
+  const ctx = canvasEl.value.getContext('2d', { willReadFrequently: true })
   ctx.beginPath()
   ctx.arc(x, y, props.brushSize / 2, 0, Math.PI * 2)
   ctx.fillStyle = '#fff'
@@ -91,7 +91,7 @@ function startDraw(e) {
 
 function draw(e) {
   if (!isDrawing.value) return
-  const ctx     = canvasEl.value.getContext('2d')
+  const ctx = canvasEl.value.getContext('2d', { willReadFrequently: true })
   const { x, y } = getPos(e)
   ctx.beginPath()
   ctx.moveTo(lastX, lastY)
@@ -140,12 +140,12 @@ function drawTouch(e) {
 
 // ─── Effacer ──────────────────────────────────────────────────────────────────
 function clear() {
-  const ctx = canvasEl.value.getContext('2d')
+  const ctx = canvasEl.value.getContext('2d', { willReadFrequently: true })
   ctx.fillStyle = '#000'
   ctx.fillRect(0, 0, props.size, props.size)
   // Effacer aussi l'aperçu
   if (previewEl.value) {
-    const pCtx = previewEl.value.getContext('2d')
+    const pCtx = previewEl.value.getContext('2d', { willReadFrequently: true })
     pCtx.fillStyle = '#000'
     pCtx.fillRect(0, 0, 28, 28)
   }
