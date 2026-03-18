@@ -3,23 +3,23 @@
     <!-- ── Navigation ── -->
     <nav class="navbar">
       <RouterLink to="/" class="nav-brand">
-        🧠 <span>NeuralKids</span>
+         <span>NeuralKids</span>
       </RouterLink>
       <div class="nav-links">
         <RouterLink to="/" class="nav-item" active-class="nav-active" exact>
-          🏠 Accueil
+           Accueil
         </RouterLink>
         <RouterLink to="/simulator" class="nav-item" active-class="nav-active">
-          🐱 Simulateur
+           Simulateur
         </RouterLink>
         <RouterLink to="/mnist" class="nav-item" active-class="nav-active">
-          ✏️ Dessin IA
+           Dessin IA
         </RouterLink>
         <RouterLink to="/games" class="nav-item" active-class="nav-active">
-          🎮 Mini-jeux
+           Mini-jeux
         </RouterLink>
         <RouterLink to="/bio" class="nav-item" active-class="nav-active">
-          🔬 Biologie
+           Biologie
         </RouterLink>
       </div>
     </nav>
@@ -166,4 +166,28 @@ html, body {
 .btn-primary  { background: var(--coral);  color: #fff; }
 .btn-teal     { background: var(--teal);   color: #fff; }
 .btn-ghost    { background: #e5e7eb;       color: var(--dark); }
+
+@keyframes shake {
+  0% { transform: translate(1px, 1px) rotate(0deg); }
+  10% { transform: translate(-1px, -2px) rotate(-1deg); }
+  20% { transform: translate(-3px, 0px) rotate(1deg); }
+  30% { transform: translate(3px, 2px) rotate(0deg); }
+  40% { transform: translate(1px, -1px) rotate(1deg); }
+  50% { transform: translate(-1px, 2px) rotate(-1deg); }
+  60% { transform: translate(-3px, 1px) rotate(0deg); }
+  70% { transform: translate(3px, 1px) rotate(-1deg); }
+  80% { transform: translate(-1px, -1px) rotate(1deg); }
+  90% { transform: translate(1px, 2px) rotate(0deg); }
+  100% { transform: translate(1px, -2px) rotate(-1deg); }
+}
+
+/* La classe qu'on applique au body pour déclencher l'animation */
+.shake-animation {
+  /* On fait trembler pendant 0.5s en boucle */
+  animation: shake 0.5s;
+  animation-iteration-count: infinite;
+
+  /* Sécurité pour éviter les barres de défilement bizarres pendant le tremblement */
+  overflow: hidden;
+}
 </style>

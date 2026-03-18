@@ -7,46 +7,13 @@
       Compare une fourmi, un chien, un humain… et une IA !
     </p>
 
-    <!-- Frise comparative -->
-    <div class="compare-grid">
-      <div v-for="entity in entities" :key="entity.name"
-        class="entity-card"
-        :style="`--c: ${entity.color}`"
-      >
-        <div class="entity-emoji">{{ entity.emoji }}</div>
-        <h3 class="entity-name">{{ entity.name }}</h3>
-        <div class="entity-count">{{ entity.count }}</div>
-        <div class="entity-label">neurones</div>
-        <!-- Barre proportionnelle logarithmique -->
-        <div class="bar-wrap">
-          <div class="bar-fill" :style="`width: ${entity.barPct}%`" />
-        </div>
-        <p class="entity-skill">{{ entity.skill }}</p>
-      </div>
-    </div>
 
-    <!-- Note pédagogique -->
-    <div class="note-box card">
-      <h3>💡 Ce que cela veut dire</h3>
-      <p>
-        Un réseau de neurones artificiel n'a que ~1 000 connexions pour reconnaître des chiffres,
-        là où votre cerveau en a <strong>86 milliards</strong> pour tout ce que vous faites
-        (parler, ressentir, créer…). L'IA n'est donc pas « intelligente comme nous »,
-        mais <em>très efficace</em> pour une tâche précise.
-      </p>
-    </div>
-
-    <div class="coming-badge">🚧 Frise animée — En cours de développement</div>
+    <div class="coming-badge">Frise animée — En cours de développement</div>
   </div>
 </template>
 
 <script setup>
-const entities = [
-  { name: 'Fourmi',  emoji: '🐜', count: '250 000',   barPct: 15, skill: 'Galeries & communication',  color: '#6BCB77' },
-  { name: 'Chien',   emoji: '🐕', count: '2,5 milliards', barPct: 55, skill: 'Émotions & ordres',       color: '#FF9F43' },
-  { name: 'Humain',  emoji: '🧑', count: '86 milliards',  barPct: 90, skill: 'Conscience & art',         color: '#4D96FF' },
-  { name: 'IA',      emoji: '🤖', count: '~1 000',    barPct:  5, skill: 'Reconnaissance de chiffres', color: '#A78BFA' },
-]
+
 </script>
 
 <style scoped>

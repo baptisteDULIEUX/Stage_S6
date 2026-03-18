@@ -8,8 +8,6 @@ import {
 export { ROUNDS }
 
 // ─── Calcul du réseau (pur JS, pas de Vue) ───────────────────────────────────
-// Travaille avec des IDs de nœuds et une map de poids sparse.
-// Ne connaît pas les matrices — uniquement des sommes sur les arêtes.
 //
 // Retourne : nodeStates — une map id → état
 //   entrées  : { value: 0|1, active: bool }

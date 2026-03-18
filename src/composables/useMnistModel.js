@@ -1,10 +1,12 @@
-import { ref, shallowRef, readonly } from 'vue'
+import { ref, shallowRef } from 'vue'
 import * as tf from '@tensorflow/tfjs'
 
-const MODEL_URL = 'https://storage.googleapis.com/tfjs-models/tfjs/mnist_transfer_cnn_v1/model.json'
+
+const MODEL_URL = '/models/doodle/model.json'
+export const AI_LABELS = ['Chat', 'Chien', 'Inconnu']
 
 const LAYER_NAMES = {
-  conv1:   'conv2d_1',
+  conv1:   'conv2d_1_input',
   pool1:   'max_pooling2d_1',
   flatten: 'flatten_1',
 }
@@ -23,7 +25,6 @@ export function useMnistModel() {
     isLoading.value = true
     loadError.value = null
     try {
-      // 3. Attendre que le backend de la carte graphique soit prêt
       await tf.ready()
 
       model.value = await tf.loadLayersModel(MODEL_URL)
@@ -61,7 +62,6 @@ export function useMnistModel() {
     return result
   }
 
-  // ─── L'ASTUCE ANTI-CRASH : Exécution "Eager" manuelle ──────────────────────
   async function extractActivations(canvas28) {
     if (!model.value || !canvas28) return
 

@@ -76,7 +76,6 @@
           :stroke="isActive(id) ? '#38a169' : '#9ca3af'"
           :stroke-width="isActive(id) ? 2.5 : 1.5"
         />
-        <!-- Décale le label vers le haut quand la somme est affichée -->
         <text
           :x="pos(id).x"
           :y="showState && ns(id)?.sum !== undefined ? pos(id).y - 5 : pos(id).y + 5"

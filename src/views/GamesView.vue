@@ -6,33 +6,8 @@
       Plonge dans les 3 couches d'un réseau convolutif… en jouant !
     </p>
 
-    <div class="games-grid">
-      <div class="game-card" style="--c: #FF6B6B">
-        <div class="game-num">1</div>
-        <div class="game-icon">🔍</div>
-        <h3>Convolution</h3>
-        <p>Fais glisser le filtre sur l'image et effectue les multiplications mentalement.</p>
-        <div class="game-badge">Calcul mental</div>
-      </div>
 
-      <div class="game-card" style="--c: #4ECDC4">
-        <div class="game-num">2</div>
-        <div class="game-icon">🏆</div>
-        <h3>Max Pooling</h3>
-        <p>Identifie la valeur la plus haute dans chaque groupe 2×2 le plus vite possible !</p>
-        <div class="game-badge">Rapidité visuelle</div>
-      </div>
-
-      <div class="game-card" style="--c: #A78BFA">
-        <div class="game-num">3</div>
-        <div class="game-icon">🧹</div>
-        <h3>ReLU</h3>
-        <p>Mémorise la grille et transforme toutes les valeurs négatives en zéro !</p>
-        <div class="game-badge">Mémoire</div>
-      </div>
-    </div>
-
-    <div class="coming-badge">🚧 En cours de développement — Semaine 3–4</div>
+    <div class="coming-badge">En cours de développement</div>
   </div>
 </template>
 

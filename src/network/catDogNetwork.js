@@ -1,8 +1,3 @@
-// ─────────────────────────────────────────────────────────────────────────────
-// Définition du réseau Chat / Chien — données pures, aucune logique Vue ici
-// ─────────────────────────────────────────────────────────────────────────────
-
-// Ordre des couches (de gauche à droite dans le graphe)
 export const LAYER_ORDER = ['inputs', 'hidden', 'outputs']
 
 // Nœuds : chaque nœud déclare sa couche + métadonnées visuelles optionnelles
@@ -23,7 +18,7 @@ export const NODES = {
   CHIEN: { layer: 'outputs', label: 'CHIEN', emoji: '🐶', color: '#3B82F6' },
 }
 
-// IDs groupés par couche (utiles pour le calcul du réseau)
+// IDs groupés par couche
 export const INPUT_IDS  = ['E1', 'E2', 'E3']
 export const HIDDEN_IDS = ['H1', 'H2', 'H3', 'H4', 'H5']
 export const OUTPUT_IDS = ['CHAT', 'CHIEN']
@@ -42,8 +37,6 @@ export const CONNECTIONS = [
 ]
 
 // ─── Poids par manche ────────────────────────────────────────────────────────
-// Format sparse : clé 'from->to', valeur = poids (absent = 0)
-// Avantage : on ne liste que ce qui est non nul, tout le reste est implicitement 0.
 
 export const WEIGHTS_R1 = {
   // Connexions actives — réseau initial (mauvais réglage)
@@ -59,12 +52,12 @@ export const WEIGHTS_R1 = {
 export const WEIGHTS_R2 = {
   // Connexions actives — après apprentissage
   'E1->H1': 2,
-  'E2->H1': 1,  // ← nouveau
-  'E3->H1': 1,  // ← nouveau
+  'E2->H1': 1,  //  nouveau
+  'E3->H1': 1,  //  nouveau
   'E1->H5': 2,
-  'E2->H5': 1,  // ← nouveau
-  'E3->H5': 1,  // ← nouveau
-  'E2->H3': 1,  // ← réduit (était 3)
+  'E2->H5': 1,  //  nouveau
+  'E3->H5': 1,  //  nouveau
+  'E2->H3': 1,  //  réduit (était 3)
   'E3->H3': 2,
   'H1->CHAT':  2,
   'H5->CHAT':  2,

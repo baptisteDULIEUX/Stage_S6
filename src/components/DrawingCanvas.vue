@@ -38,9 +38,9 @@ import { ref, onMounted, watch } from 'vue'
 
 // ─── Props & emits ────────────────────────────────────────────────────────────
 const props = defineProps({
-  size:        { type: Number,  default: 280 },  // taille du canvas de dessin
-  brushSize:   { type: Number,  default: 18  },  // épaisseur du trait
-  showPreview: { type: Boolean, default: true },  // afficher l'aperçu 28×28
+  size:        { type: Number,  default: 280 },
+  brushSize:   { type: Number,  default: 18  },
+  showPreview: { type: Boolean, default: true },
 })
 
 // Émet le canvas pré-traité dès qu'un tracé se termine
@@ -153,7 +153,7 @@ function clear() {
 }
 
 // ─── Prétraitement → 28×28 ────────────────────────────────────────────────────
-// C'est l'étape clé : on extrait la bounding-box du tracé, on la centre,
+// on extrait la bounding-box du tracé, on la centre,
 // puis on redimensionne à 28×28 dans un canvas temporaire.
 function processAndEmit() {
   const src = canvasEl.value

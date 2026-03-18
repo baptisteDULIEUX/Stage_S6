@@ -2,7 +2,6 @@
   <div class="home">
     <!-- ── Hero ── -->
     <section class="hero">
-      <div class="hero-emoji">🧠</div>
       <h1 class="hero-title">Comment pense une IA ?</h1>
       <p class="hero-subtitle">
         Découvre les réseaux de neurones en jouant ! <br />
@@ -46,33 +45,6 @@
           <span class="module-tag coming">Bientôt</span>
         </RouterLink>
 
-      </div>
-    </section>
-
-    <!-- ── L'essentiel en 3 étapes ── -->
-    <section class="steps-section card">
-      <h2 class="section-title" style="text-align:center">Comment fonctionne un réseau de neurones ?</h2>
-      <div class="steps">
-        <div class="step">
-          <div class="step-num">1</div>
-          <div class="step-emoji">👁️</div>
-          <h4>Observer</h4>
-          <p>Le réseau regarde des <strong>caractéristiques</strong> : moustaches, oreilles pointues, yeux ronds…</p>
-        </div>
-        <div class="step-arrow">→</div>
-        <div class="step">
-          <div class="step-num">2</div>
-          <div class="step-emoji">⚖️</div>
-          <h4>Peser</h4>
-          <p>Chaque indice est multiplié par un <strong>poids</strong> — certains indices comptent plus que d'autres.</p>
-        </div>
-        <div class="step-arrow">→</div>
-        <div class="step">
-          <div class="step-num">3</div>
-          <div class="step-emoji">📚</div>
-          <h4>Apprendre</h4>
-          <p>En cas d'erreur, on <strong>ajuste les poids</strong> pour que le réseau soit meilleur la prochaine fois.</p>
-        </div>
       </div>
     </section>
   </div>
