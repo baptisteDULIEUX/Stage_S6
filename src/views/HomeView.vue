@@ -11,42 +11,6 @@
         🚀 Commencer l'aventure !
       </RouterLink>
     </section>
-
-    <!-- ── Modules ── -->
-    <section class="modules">
-      <h2 class="section-title">Ce que tu vas explorer</h2>
-      <div class="module-grid">
-
-        <RouterLink to="/simulator" class="module-card" style="--accent: #FF6B6B">
-          <div class="module-icon">🐱🐶</div>
-          <h3>Simulateur Chat / Chien</h3>
-          <p>Joue le rôle d'un neurone et observe comment le réseau apprend !</p>
-          <span class="module-tag">4 manches</span>
-        </RouterLink>
-
-        <RouterLink to="/mnist" class="module-card" style="--accent: #4ECDC4">
-          <div class="module-icon">✏️</div>
-          <h3>Dessine un chiffre</h3>
-          <p>Dessine un chiffre et regarde l'IA le deviner en temps réel !</p>
-          <span class="module-tag coming">Bientôt</span>
-        </RouterLink>
-
-        <RouterLink to="/games" class="module-card" style="--accent: #A78BFA">
-          <div class="module-icon">🎮</div>
-          <h3>Mini-jeux CNN</h3>
-          <p>Convolution, Pooling, ReLU… deviens expert en 3 mini-jeux !</p>
-          <span class="module-tag coming">Bientôt</span>
-        </RouterLink>
-
-        <RouterLink to="/bio" class="module-card" style="--accent: #6BCB77">
-          <div class="module-icon">🔬</div>
-          <h3>Parallèle Biologique</h3>
-          <p>Compare les neurones d'une fourmi, d'un humain et d'une IA !</p>
-          <span class="module-tag coming">Bientôt</span>
-        </RouterLink>
-
-      </div>
-    </section>
   </div>
 </template>
 

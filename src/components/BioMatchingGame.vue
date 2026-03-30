@@ -7,11 +7,11 @@
       <h2 class="start-title">Qui a combien de neurones ?</h2>
       <p class="start-sub">Glisse chaque carte sur le bon animal !</p>
       <div class="start-rule">
-        🃏 En bas : les cartes
+         <strong>En bas :</strong> les cartes
         <strong style="color:#0f766e">neurones</strong> et
         <strong style="color:#5b21b6">capacités</strong><br>
-        🐾 En haut : les animaux à compléter<br>
-        👆 Glisse chaque carte dans la bonne case !
+        <strong>En haut :</strong> les animaux à compléter<br>
+         Glisse chaque carte dans la bonne case !
       </div>
       <button class="game-btn" @click="initGame">▶ Commencer !</button>
     </div>
@@ -84,26 +84,26 @@
     </template>
 
     <!-- ── Victoire ── -->
-    <div v-else-if="phase === 'victory'" class="victory">
-      <div class="victory-emoji">{{ victoryEmoji }}</div>
-      <h2 class="victory-title">Toutes les cartes placées !</h2>
-      <p class="victory-sub">{{ victoryMsg }}</p>
-      <div class="medals">
-        <div class="medal">
-          <div class="medal-val">{{ PAIRS.length * 2 }}</div>
-          <div class="medal-lbl">cartes placées</div>
-        </div>
-        <div class="medal">
-          <div class="medal-val">{{ errors }}</div>
-          <div class="medal-lbl">erreurs</div>
-        </div>
-        <div class="medal">
-          <div class="medal-val">{{ accuracy }}%</div>
-          <div class="medal-lbl">précision</div>
-        </div>
-      </div>
-      <button class="game-btn" @click="initGame">🔄 Rejouer</button>
-    </div>
+<!--    <div v-else-if="phase === 'victory'" class="victory">-->
+<!--      <div class="victory-emoji">{{ victoryEmoji }}</div>-->
+<!--      <h2 class="victory-title">Toutes les cartes placées !</h2>-->
+<!--      <p class="victory-sub">{{ victoryMsg }}</p>-->
+<!--      <div class="medals">-->
+<!--        <div class="medal">-->
+<!--          <div class="medal-val">{{ PAIRS.length * 2 }}</div>-->
+<!--          <div class="medal-lbl">cartes placées</div>-->
+<!--        </div>-->
+<!--        <div class="medal">-->
+<!--          <div class="medal-val">{{ errors }}</div>-->
+<!--          <div class="medal-lbl">erreurs</div>-->
+<!--        </div>-->
+<!--        <div class="medal">-->
+<!--          <div class="medal-val">{{ accuracy }}%</div>-->
+<!--          <div class="medal-lbl">précision</div>-->
+<!--        </div>-->
+<!--      </div>-->
+<!--      <button class="game-btn" @click="initGame">🔄 Rejouer</button>-->
+<!--    </div>-->
 
   </div>
 </template>

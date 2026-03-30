@@ -11,37 +11,7 @@
 
     <div class="bio-body">
 
-      <!-- Frise comparative -->
-      <div class="frise card">
-        <h2 class="section-label">🧠 Neurones et capacités</h2>
-        <div class="frise-cards">
-          <div
-              v-for="e in entities" :key="e.name"
-              class="entity-card"
-              :style="`border-top: 5px solid ${e.color}`"
-          >
-            <div class="entity-emoji">{{ e.emoji }}</div>
-            <div class="entity-name">{{ e.name }}</div>
-            <div class="entity-count" :style="`color: ${e.color}`">{{ e.neurons }}</div>
-            <div class="entity-skill">{{ e.skill }}</div>
-          </div>
-        </div>
 
-        <!-- Barres logarithmiques -->
-        <div class="bars-section">
-          <p class="bars-label">Comparaison (échelle logarithmique)</p>
-          <div v-for="e in entities" :key="e.name" class="bar-row">
-            <span class="bar-emoji">{{ e.emoji }}</span>
-            <div class="bar-track">
-              <div
-                  class="bar-fill"
-                  :style="`width: ${e.logPct}%; background: ${e.color}`"
-              />
-            </div>
-            <span class="bar-count">{{ e.neurons }}</span>
-          </div>
-        </div>
-      </div>
 
       <!-- Jeu d'association -->
       <div class="game-card card">

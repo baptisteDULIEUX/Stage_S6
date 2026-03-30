@@ -41,7 +41,7 @@
               <span v-if="isDone(idx)" class="cell-mini">={{ resultOf(idx) }}</span>
             </div>
           </div>
-          <p class="img-note">Jaune = case active</p>
+          <p class="img-note"><strong style="color: ">Jaune</strong>> = case active</p>
         </div>
 
         <!-- Filtre 3×3 -->

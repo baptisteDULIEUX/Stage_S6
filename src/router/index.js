@@ -4,6 +4,8 @@ import SimulatorView from '../views/SimulatorView.vue'
 import MnistView from '../views/MnistView.vue'
 import GamesView from '../views/GamesView.vue'
 import BioView from '../views/BioView.vue'
+import IntroView from "../views/IntroView.vue";
+import PixelsView from "../views/PixelsView.vue";
 
 const routes = [
   { path: '/',          name: 'home',      component: HomeView },
@@ -11,6 +13,8 @@ const routes = [
   { path: '/mnist',     name: 'mnist',     component: MnistView },
   { path: '/games',     name: 'games',     component: GamesView },
   { path: '/bio',       name: 'bio',       component: BioView },
+  { path: '/intro',     name: 'intro',     component: IntroView },
+  { path: '/pixels',     name: 'pixels',     component: PixelsView },
 ]
 
 export default createRouter({
