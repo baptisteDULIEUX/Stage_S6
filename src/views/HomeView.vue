@@ -1,21 +1,37 @@
 <template>
-  <div class="home">
+  <div>
     <!-- ── Hero ── -->
     <section class="hero">
-      <h1 class="hero-title">Comment pense une IA ?</h1>
+      <div class="hero-emoji">🧠</div>
+      <h1 class="hero-title">NeuralKids</h1>
       <p class="hero-subtitle">
-        Découvre les réseaux de neurones en jouant ! <br />
-        Tu vas <strong>voir</strong> une IA apprendre à reconnaître des chats et des chiens 🐱🐶
+        Bienvenue dans le monde des réseaux de neurones !<br />
+        Tu vas <strong>voir</strong>, <strong>jouer</strong> et <strong>comprendre</strong>
+        comment une IA apprend à reconnaître des chats et des chiens 🐱🐶
       </p>
-      <RouterLink to="/simulator" class="btn btn-primary hero-cta">
+      <RouterLink to="/intro" class="btn btn-primary hero-cta">
         🚀 Commencer l'aventure !
       </RouterLink>
+    </section>
+
+    <!-- ── Étapes du parcours ── -->
+    <section class="steps-section card">
+      <h2 class="section-title">📍 Le parcours</h2>
+      <div class="steps">
+        <div v-for="(step, i) in JOURNEY" :key="step.id" class="step-item">
+          <div class="step-num" :style="{ background: step.color }">{{ i + 1 }}</div>
+          <div class="step-emoji">{{ step.emoji }}</div>
+          <h4>{{ step.label }}</h4>
+          <div v-if="i < JOURNEY.length - 1" class="step-arrow">→</div>
+        </div>
+      </div>
     </section>
   </div>
 </template>
 
 <script setup>
 import { RouterLink } from 'vue-router'
+import { JOURNEY } from '../stores/progress.js'
 </script>
 
 <style scoped>
@@ -24,7 +40,14 @@ import { RouterLink } from 'vue-router'
   text-align: center;
   padding: 56px 20px 48px;
 }
-.hero-emoji { font-size: 72px; }
+.hero-emoji {
+  font-size: 72px;
+  animation: bounce 2s ease-in-out infinite;
+}
+@keyframes bounce {
+  0%, 100% { transform: translateY(0); }
+  50%       { transform: translateY(-10px); }
+}
 .hero-title {
   font-family: 'Fredoka One', cursive;
   font-size: clamp(32px, 5vw, 56px);
@@ -39,91 +62,59 @@ import { RouterLink } from 'vue-router'
   max-width: 560px;
   margin: 0 auto 32px;
 }
-.hero-cta { font-size: 20px; padding: 16px 44px; box-shadow: 0 8px 28px rgba(255,107,107,0.35); }
+.hero-cta {
+  font-size: 20px;
+  padding: 16px 44px;
+  box-shadow: 0 8px 28px rgba(255, 107, 107, 0.35);
+  text-decoration: none;
+  display: inline-block;
+}
 
-/* ── Modules ── */
-.modules { margin: 40px 0; }
+/* ── Étapes ── */
+.steps-section {
+  margin: 0 0 40px;
+}
 .section-title {
   font-family: 'Fredoka One', cursive;
-  font-size: 26px;
-  margin-bottom: 24px;
+  font-size: 22px;
+  margin-bottom: 28px;
   color: var(--dark);
 }
-.module-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
-  gap: 20px;
-}
-.module-card {
-  background: #fff;
-  border-radius: var(--radius);
-  padding: 28px 22px;
-  text-decoration: none;
-  color: var(--dark);
-  border: 2.5px solid transparent;
-  box-shadow: var(--shadow);
-  transition: transform 0.2s, border-color 0.2s, box-shadow 0.2s;
-  position: relative;
-  overflow: hidden;
-}
-.module-card::before {
-  content: '';
-  position: absolute;
-  top: 0; left: 0; right: 0;
-  height: 5px;
-  background: var(--accent);
-  border-radius: var(--radius) var(--radius) 0 0;
-}
-.module-card:hover {
-  border-color: var(--accent);
-  box-shadow: 0 12px 32px rgba(0,0,0,0.12);
-}
-.module-icon { font-size: 44px; margin-bottom: 12px; }
-.module-card h3 { font-family: 'Fredoka One', cursive; font-size: 18px; margin-bottom: 8px; }
-.module-card p  { font-size: 14px; color: #4b5563; line-height: 1.5; }
-.module-tag {
-  display: inline-block;
-  margin-top: 14px;
-  padding: 4px 14px;
-  border-radius: 50px;
-  font-size: 12px;
-  font-weight: 700;
-  background: var(--accent);
-  color: #fff;
-}
-.module-tag.coming { background: #e5e7eb; color: #6b7280; }
-
-/* ── Steps ── */
-.steps-section { margin: 0; }
 .steps {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 8px;
-  margin-top: 28px;
+  gap: 4px;
   flex-wrap: wrap;
 }
-.step {
-  flex: 1;
-  min-width: 160px;
-  max-width: 220px;
+.step-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
   text-align: center;
-  padding: 20px 16px;
-  background: var(--bg);
-  border-radius: 16px;
+  position: relative;
 }
 .step-num {
-  width: 36px; height: 36px;
+  width: 32px; height: 32px;
   border-radius: 50%;
-  background: var(--dark);
-  color: var(--yellow);
+  color: #fff;
   font-family: 'Fredoka One', cursive;
-  font-size: 18px;
+  font-size: 16px;
   display: flex; align-items: center; justify-content: center;
-  margin: 0 auto 8px;
 }
-.step-emoji { font-size: 36px; margin-bottom: 8px; }
-.step h4 { font-family: 'Fredoka One', cursive; font-size: 18px; margin-bottom: 6px; }
-.step p  { font-size: 13px; color: #4b5563; line-height: 1.5; }
-.step-arrow { font-size: 28px; color: #d1d5db; flex-shrink: 0; }
+.step-emoji { font-size: 32px; }
+.step-item h4 {
+  font-family: 'Fredoka One', cursive;
+  font-size: 13px;
+  color: var(--dark);
+  max-width: 80px;
+}
+.step-arrow {
+  position: absolute;
+  right: -18px;
+  top: 28px;
+  font-size: 20px;
+  color: #d1d5db;
+}
 </style>

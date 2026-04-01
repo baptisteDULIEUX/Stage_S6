@@ -78,9 +78,16 @@
 
             <div class="popup-actions-row">
               <button class="btn btn-ghost" @click="closeResultPopup">👀 Observer le graphe</button>
-              <button class="btn btn-primary" @click="handleNext">
-                {{ store.currentRoundIndex < ROUNDS.length - 1 ? 'Manche suivante ➔' : '🔄 Recommencer' }}
-              </button>
+              <template v-if="store.currentRoundIndex < ROUNDS.length - 1">
+                    <button class="btn btn-primary" @click="handleNext">
+                      Manche suivante ➔
+                    </button>
+              </template>
+              <template v-else>
+                <button class="btn btn-teal" @click="continueToNext">
+                🔬 Découvrir la biologie →
+                </button>
+              </template>
             </div>
           </div>
         </div>
@@ -198,8 +205,18 @@ import {
   INPUT_IDS, HIDDEN_IDS, OUTPUT_IDS,
 } from '../network/catDogNetwork.js'
 
+import { useProgressStore } from '../stores/progress.js'
+const progress = useProgressStore()
+import { useRouter } from 'vue-router'
+const router = useRouter()
+
 const store = useSimulatorStore()
 const round = computed(() => store.currentRound)
+
+function continueToNext() {
+  progress.completeStep('simulator')
+  router.push(progress.nextRoute('simulator'))
+}
 
 // ─── Entrées utilisateur ──────────────────────────────────────────────────────
 const userInputs = reactive(Object.fromEntries(INPUT_IDS.map(id => [id, 0])))

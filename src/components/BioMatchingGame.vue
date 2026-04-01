@@ -84,32 +84,44 @@
     </template>
 
     <!-- ── Victoire ── -->
-<!--    <div v-else-if="phase === 'victory'" class="victory">-->
-<!--      <div class="victory-emoji">{{ victoryEmoji }}</div>-->
-<!--      <h2 class="victory-title">Toutes les cartes placées !</h2>-->
-<!--      <p class="victory-sub">{{ victoryMsg }}</p>-->
-<!--      <div class="medals">-->
-<!--        <div class="medal">-->
-<!--          <div class="medal-val">{{ PAIRS.length * 2 }}</div>-->
-<!--          <div class="medal-lbl">cartes placées</div>-->
-<!--        </div>-->
-<!--        <div class="medal">-->
-<!--          <div class="medal-val">{{ errors }}</div>-->
-<!--          <div class="medal-lbl">erreurs</div>-->
-<!--        </div>-->
-<!--        <div class="medal">-->
-<!--          <div class="medal-val">{{ accuracy }}%</div>-->
-<!--          <div class="medal-lbl">précision</div>-->
-<!--        </div>-->
-<!--      </div>-->
-<!--      <button class="game-btn" @click="initGame">🔄 Rejouer</button>-->
-<!--    </div>-->
+    <div v-else-if="phase === 'victory'" class="victory">
+      <div class="victory-emoji">{{ victoryEmoji }}</div>
+      <h2 class="victory-title">Toutes les cartes placées !</h2>
+      <p class="victory-sub">{{ victoryMsg }}</p>
+      <div class="medals">
+        <div class="medal">
+          <div class="medal-val">{{ PAIRS.length * 2 }}</div>
+          <div class="medal-lbl">cartes placées</div>
+        </div>
+        <div class="medal">
+          <div class="medal-val">{{ errors }}</div>
+          <div class="medal-lbl">erreurs</div>
+        </div>
+        <div class="medal">
+          <div class="medal-val">{{ accuracy }}%</div>
+          <div class="medal-lbl">précision</div>
+        </div>
+      </div>
+
+      <!-- Frise complétée — reste visible -->
+      <div class="completed-frise">
+        <div v-for="p in PAIRS" :key="p.id" class="completed-row">
+          <span class="cf-emoji">{{ p.emoji }}</span>
+          <span class="cf-name">{{ p.name }}</span>
+          <span class="cf-tag neurons">{{ p.neurons }}</span>
+          <span class="cf-tag skill">{{ p.skill }}</span>
+        </div>
+      </div>
+    </div>
 
   </div>
 </template>
 
 <script setup>
 import { ref, computed, reactive } from 'vue'
+
+const emit = defineEmits(['complete'])
+
 
 // ─── Données ──────────────────────────────────────────────────────────────────
 const PAIRS = [
@@ -185,7 +197,10 @@ function applyDrop(cardKey, zoneId) {
     placed[cardKey] = true
     feedback.value  = 'correct'
     if (totalPlaced.value >= PAIRS.length * 2) {
-      setTimeout(() => { phase.value = 'victory' }, 500)
+      setTimeout(() => {
+        phase.value = 'victory'
+        emit('complete')
+      }, 500)
     }
   } else {
     errors.value++
@@ -333,4 +348,38 @@ function moveTouchClone(touch) {
 
 /* ── Bouton ── */
 .game-btn { font-family: 'Fredoka One', cursive; font-size: 17px; padding: 12px 28px; border-radius: 50px; border: none; background: #4ECDC4; color: #fff; cursor: pointer; }
+
+.completed-frise {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 100%;
+  max-width: 480px;
+  margin-top: 8px;
+}
+.completed-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: #f9fafb;
+  border-radius: 12px;
+  padding: 8px 12px;
+  border: 1.5px solid #e5e7eb;
+  flex-wrap: wrap;
+}
+.cf-emoji { font-size: 22px; flex-shrink: 0; }
+.cf-name  {
+  font-family: 'Fredoka One', cursive;
+  font-size: 14px;
+  min-width: 60px;
+  flex-shrink: 0;
+}
+.cf-tag {
+  font-family: 'Fredoka One', cursive;
+  font-size: 11px;
+  padding: 3px 10px;
+  border-radius: 50px;
+}
+.cf-tag.neurons { background: #e0fafa; color: #0f766e; }
+.cf-tag.skill   { background: #ede9fe; color: #5b21b6; }
 </style>

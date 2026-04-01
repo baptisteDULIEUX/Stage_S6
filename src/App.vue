@@ -1,43 +1,132 @@
 <template>
   <div class="app-root">
-    <!-- ── Navigation ── -->
-    <nav class="navbar">
-      <RouterLink to="/" class="nav-brand">
-         <span>NeuralKids</span>
-      </RouterLink>
-      <div class="nav-links">
-        <RouterLink to="/" class="nav-item" active-class="nav-active" exact>
-           Accueil
-        </RouterLink>
-        <RouterLink to="/simulator" class="nav-item" active-class="nav-active">
-           Simulateur
-        </RouterLink>
-        <RouterLink to="/mnist" class="nav-item" active-class="nav-active">
-           Dessin IA
-        </RouterLink>
-        <RouterLink to="/games" class="nav-item" active-class="nav-active">
-           Mini-jeux
-        </RouterLink>
-        <RouterLink to="/bio" class="nav-item" active-class="nav-active">
-           Biologie
-        </RouterLink>
-      </div>
-    </nav>
 
-    <!-- ── Contenu ── -->
+    <!-- ── Header ── -->
+    <header class="app-header">
+      <div class="header-inner">
+
+        <!-- Brand -->
+        <RouterLink to="/" class="nav-brand">
+          🧠 <span>NeuralKids</span>
+        </RouterLink>
+
+        <!-- Barre de progression du parcours -->
+        <nav class="journey-bar" aria-label="Parcours">
+          <div class="journey-track">
+            <template v-for="(step, idx) in JOURNEY" :key="step.id">
+
+              <!-- Ligne de connexion entre étapes -->
+              <div
+                  v-if="idx > 0"
+                  class="journey-connector"
+                  :class="{ done: progress.isCompleted(JOURNEY[idx - 1].id) }"
+              />
+
+              <!-- Pastille d'étape -->
+              <button
+                  class="journey-step"
+                  :class="{
+                  completed:  progress.isCompleted(step.id),
+                  current:    isCurrent(idx),
+                  locked:     !progress.isUnlocked(step.id) && !progress.isCompleted(step.id),
+                }"
+                  :style="stepStyle(step, idx)"
+                  :disabled="!progress.isUnlocked(step.id) && !progress.isCompleted(step.id)"
+                  :title="step.label"
+                  @click="navigate(step)"
+              >
+                <span class="step-emoji">
+                  {{ progress.isCompleted(step.id) ? '✅' : progress.isUnlocked(step.id) ? step.emoji : '🔒' }}
+                </span>
+                <span class="step-label">{{ step.label }}</span>
+              </button>
+
+            </template>
+          </div>
+        </nav>
+
+        <!-- Bouton reset (petit, discret) -->
+        <button class="reset-btn" title="Recommencer depuis le début" @click="confirmReset">
+          🔄
+        </button>
+
+      </div>
+    </header>
+
+    <!-- ── Contenu principal ── -->
     <main class="main-content">
-      <RouterView />
+      <RouterView v-slot="{ Component }">
+        <Transition name="page" mode="out-in">
+          <component :is="Component" />
+        </Transition>
+      </RouterView>
     </main>
 
     <!-- ── Footer ── -->
     <footer class="footer">
       <span>FEMTO-ST Sciences & Technologies · Support pédagogique IA · 2026</span>
     </footer>
+
+    <!-- ── Popup de confirmation reset ── -->
+    <Teleport to="body">
+      <Transition name="fade">
+        <div v-if="showResetConfirm" class="overlay" @click.self="showResetConfirm = false">
+          <div class="reset-popup">
+            <div class="reset-emoji">🔄</div>
+            <h3 class="reset-title">Recommencer ?</h3>
+            <p class="reset-msg">Tu vas perdre toute ta progression. Tu es sûr(e) ?</p>
+            <div class="reset-actions">
+              <button class="btn-cancel" @click="showResetConfirm = false">Annuler</button>
+              <button class="btn-confirm" @click="doReset">Oui, recommencer !</button>
+            </div>
+          </div>
+        </div>
+      </Transition>
+    </Teleport>
+
   </div>
 </template>
 
 <script setup>
-import { RouterLink, RouterView } from 'vue-router'
+import { ref, computed } from 'vue'
+import { RouterLink, RouterView, useRouter, useRoute } from 'vue-router'
+import { useProgressStore, JOURNEY } from './stores/progress.js'
+
+const progress = useProgressStore()
+const router   = useRouter()
+const route    = useRoute()
+
+// ── Helpers ───────────────────────────────────────────────────────────────────
+function isCurrent(idx) {
+  return route.meta?.stepId === JOURNEY[idx].id
+}
+
+function stepStyle(step, idx) {
+  const completed = progress.isCompleted(step.id)
+  const current   = isCurrent(idx)
+  const unlocked  = progress.isUnlocked(step.id)
+  if (completed) return { '--step-color': step.color, background: step.color + '22', borderColor: step.color }
+  if (current)   return { '--step-color': step.color, background: step.color,        borderColor: step.color, color: '#fff' }
+  if (unlocked)  return { '--step-color': step.color, borderColor: step.color + '88' }
+  return {}
+}
+
+function navigate(step) {
+  if (progress.isUnlocked(step.id) || progress.isCompleted(step.id)) {
+    router.push(step.route)
+  }
+}
+
+// ── Reset ─────────────────────────────────────────────────────────────────────
+const showResetConfirm = ref(false)
+
+function confirmReset() { showResetConfirm.value = true }
+
+function doReset() {
+  progress.reset()
+  showResetConfirm.value = false
+  router.push('/')
+}
 </script>
 
 <style>
@@ -72,6 +161,7 @@ html, body {
   flex-direction: column;
   min-height: 100vh;
 }
+
 .main-content {
   flex: 1;
   max-width: 1100px;
@@ -80,52 +170,121 @@ html, body {
   padding: 32px 20px 60px;
 }
 
-/* ── Navbar ── */
-.navbar {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0 28px;
-  height: 64px;
+/* ── Header ── */
+.app-header {
   background: var(--dark);
-  box-shadow: 0 3px 12px rgba(0,0,0,0.15);
+  box-shadow: 0 3px 16px rgba(0,0,0,0.18);
   position: sticky;
   top: 0;
   z-index: 100;
+}
+
+.header-inner {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 20px;
+  height: 64px;
+  display: flex;
+  align-items: center;
   gap: 16px;
 }
 
+/* Brand */
 .nav-brand {
   font-family: 'Fredoka One', cursive;
-  font-size: 22px;
+  font-size: 20px;
   color: var(--yellow);
   text-decoration: none;
+  white-space: nowrap;
   display: flex;
   align-items: center;
   gap: 6px;
-  white-space: nowrap;
+  flex-shrink: 0;
 }
-.nav-brand span { letter-spacing: 0.5px; }
 
-.nav-links {
+/* ── Barre de parcours ── */
+.journey-bar {
+  flex: 1;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.journey-bar::-webkit-scrollbar { display: none; }
+
+.journey-track {
   display: flex;
   align-items: center;
-  gap: 4px;
-  flex-wrap: wrap;
+  gap: 0;
+  padding: 4px 0;
+  min-width: max-content;
+  margin: 0 auto;
 }
 
-.nav-item {
-  font-family: 'Nunito', sans-serif;
-  font-weight: 700;
-  font-size: 14px;
-  color: #cbd5e1;
-  text-decoration: none;
-  padding: 6px 14px;
-  border-radius: 50px;
-  transition: all 0.2s;
+/* Ligne de connexion */
+.journey-connector {
+  width: 24px;
+  height: 2px;
+  background: #4b5563;
+  flex-shrink: 0;
+  transition: background 0.4s;
 }
-.nav-item:hover   { background: rgba(255,255,255,0.1); color: #fff; }
-.nav-active       { background: var(--coral) !important; color: #fff !important; }
+.journey-connector.done {
+  background: var(--green);
+}
+
+/* Pastille */
+.journey-step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  background: transparent;
+  border: 2px solid #4b5563;
+  border-radius: 50px;
+  padding: 4px 10px;
+  cursor: pointer;
+  transition: all 0.25s;
+  flex-shrink: 0;
+  min-width: 72px;
+}
+.journey-step:not(:disabled):hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+}
+.journey-step:disabled {
+  cursor: not-allowed;
+  opacity: 0.45;
+}
+.journey-step.current {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 16px rgba(0,0,0,0.30);
+}
+
+.step-emoji {
+  font-size: 18px;
+  line-height: 1;
+}
+.step-label {
+  font-family: 'Fredoka One', cursive;
+  font-size: 10px;
+  color: #cbd5e1;
+  white-space: nowrap;
+  line-height: 1;
+}
+.journey-step.completed .step-label { color: var(--step-color, #6BCB77); }
+.journey-step.current   .step-label { color: #fff; }
+
+/* ── Bouton reset ── */
+.reset-btn {
+  background: none;
+  border: none;
+  font-size: 16px;
+  cursor: pointer;
+  opacity: 0.4;
+  transition: opacity 0.2s, transform 0.2s;
+  flex-shrink: 0;
+  padding: 4px;
+}
+.reset-btn:hover { opacity: 0.9; transform: rotate(180deg); }
 
 /* ── Footer ── */
 .footer {
@@ -137,57 +296,72 @@ html, body {
   border-top: 1px solid #e5e7eb;
 }
 
-/* ── Transition de page ── */
+/* ── Popup reset ── */
+.overlay {
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,0.5);
+  display: flex; align-items: center; justify-content: center;
+  z-index: 999;
+  padding: 20px;
+}
+.reset-popup {
+  background: #fff;
+  border-radius: 24px;
+  padding: 36px 32px;
+  max-width: 380px;
+  width: 100%;
+  text-align: center;
+  box-shadow: 0 24px 64px rgba(0,0,0,0.25);
+}
+.reset-emoji { font-size: 52px; margin-bottom: 12px; line-height: 1; }
+.reset-title { font-family: 'Fredoka One', cursive; font-size: 24px; margin-bottom: 10px; }
+.reset-msg   { font-size: 15px; color: #4b5563; line-height: 1.6; margin-bottom: 24px; }
+.reset-actions { display: flex; gap: 12px; justify-content: center; }
+
+.btn-cancel {
+  padding: 10px 24px; border-radius: 50px; border: 2px solid #e5e7eb;
+  background: #fff; font-family: 'Fredoka One', cursive; font-size: 15px;
+  cursor: pointer; color: #374151; transition: all 0.2s;
+}
+.btn-cancel:hover { border-color: #9ca3af; }
+
+.btn-confirm {
+  padding: 10px 24px; border-radius: 50px; border: none;
+  background: var(--coral); color: #fff;
+  font-family: 'Fredoka One', cursive; font-size: 15px;
+  cursor: pointer; transition: all 0.2s;
+}
+.btn-confirm:hover { background: #e85555; transform: translateY(-1px); }
+
+/* ── Transitions de page ── */
 .page-enter-active, .page-leave-active { transition: opacity 0.2s, transform 0.2s; }
 .page-enter-from  { opacity: 0; transform: translateY(12px); }
 .page-leave-to    { opacity: 0; transform: translateY(-8px); }
 
-/* ── Utilitaires communs ── */
+.fade-enter-active, .fade-leave-active { transition: opacity 0.2s; }
+.fade-enter-from, .fade-leave-to       { opacity: 0; }
+
+/* ── Utilitaires globaux (card, btn) ── */
 .card {
   background: var(--card-bg);
   border-radius: var(--radius);
   box-shadow: var(--shadow);
-  padding: 28px;
+  padding: 24px;
 }
 .btn {
   font-family: 'Fredoka One', cursive;
-  font-size: 18px;
-  border: none;
+  font-size: 15px;
+  padding: 10px 22px;
   border-radius: 50px;
-  padding: 12px 32px;
+  border: none;
   cursor: pointer;
-  transition: transform 0.15s, box-shadow 0.15s;
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
+  transition: all 0.2s;
 }
-.btn:hover:not(:disabled) { box-shadow: 0 8px 20px rgba(0,0,0,0.15); }
-.btn:disabled { opacity: 0.5; cursor: not-allowed; }
-.btn-primary  { background: var(--coral);  color: #fff; }
-.btn-teal     { background: var(--teal);   color: #fff; }
-.btn-ghost    { background: #e5e7eb;       color: var(--dark); }
-
-@keyframes shake {
-  0% { transform: translate(1px, 1px) rotate(0deg); }
-  10% { transform: translate(-1px, -2px) rotate(-1deg); }
-  20% { transform: translate(-3px, 0px) rotate(1deg); }
-  30% { transform: translate(3px, 2px) rotate(0deg); }
-  40% { transform: translate(1px, -1px) rotate(1deg); }
-  50% { transform: translate(-1px, 2px) rotate(-1deg); }
-  60% { transform: translate(-3px, 1px) rotate(0deg); }
-  70% { transform: translate(3px, 1px) rotate(-1deg); }
-  80% { transform: translate(-1px, -1px) rotate(1deg); }
-  90% { transform: translate(1px, 2px) rotate(0deg); }
-  100% { transform: translate(1px, -2px) rotate(-1deg); }
-}
-
-/* La classe qu'on applique au body pour déclencher l'animation */
-.shake-animation {
-  /* On fait trembler pendant 0.5s en boucle */
-  animation: shake 0.5s;
-  animation-iteration-count: infinite;
-
-  /* Sécurité pour éviter les barres de défilement bizarres pendant le tremblement */
-  overflow: hidden;
-}
+.btn:disabled { opacity: 0.4; cursor: not-allowed; }
+.btn-primary { background: var(--coral);  color: #fff; }
+.btn-primary:hover:not(:disabled)  { background: #e85555; transform: translateY(-2px); }
+.btn-teal    { background: var(--teal);   color: #fff; }
+.btn-teal:hover:not(:disabled)     { background: #38b2ac; transform: translateY(-2px); }
+.btn-ghost   { background: #f3f4f6; color: var(--dark); border: 2px solid #e5e7eb; }
+.btn-ghost:hover:not(:disabled)    { background: #e5e7eb; }
 </style>

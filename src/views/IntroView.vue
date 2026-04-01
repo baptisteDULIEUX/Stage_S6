@@ -120,6 +120,9 @@
 import { ref, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 
+import { useProgressStore } from '../stores/progress.js'
+const progress = useProgressStore()
+
 
 const router   = useRouter()
 
