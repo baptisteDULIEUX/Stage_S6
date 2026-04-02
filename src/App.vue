@@ -7,7 +7,7 @@
 
         <!-- Brand -->
         <RouterLink to="/" class="nav-brand">
-          🧠 <span>NeuralKids</span>
+          <p>home</p>
         </RouterLink>
 
         <!-- Barre de progression du parcours -->
@@ -62,10 +62,6 @@
       </RouterView>
     </main>
 
-    <!-- ── Footer ── -->
-    <footer class="footer">
-      <span>FEMTO-ST Sciences & Technologies · Support pédagogique IA · 2026</span>
-    </footer>
 
     <!-- ── Popup de confirmation reset ── -->
     <Teleport to="body">

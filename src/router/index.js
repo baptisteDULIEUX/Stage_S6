@@ -5,7 +5,8 @@ import PixelsView    from '../views/PixelsView.vue'
 import SimulatorView from '../views/SimulatorView.vue'
 import BioView       from '../views/BioView.vue'
 import GamesView     from '../views/GamesView.vue'
-import MnistView     from '../views/MnistView.vue'
+
+// MnistView supprimé : le module dessin est intégré dans GamesView
 
 const routes = [
   {
@@ -42,13 +43,7 @@ const routes = [
     path: '/games',
     name: 'games',
     component: GamesView,
-    meta: { title: 'Mini-jeux CNN', stepId: 'games', inJourney: true },
-  },
-  {
-    path: '/mnist',
-    name: 'mnist',
-    component: MnistView,
-    meta: { title: 'Dessine !', stepId: 'mnist', inJourney: true },
+    meta: { title: 'Mini-jeux & Dessin IA', stepId: 'games', inJourney: true },
   },
 ]
 

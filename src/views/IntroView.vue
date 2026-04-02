@@ -89,16 +89,25 @@
         <div class="step-num">4</div>
         <div class="step-body">
           <h2 class="step-title">📚 Comment ça apprend ?</h2>
-          <p>Au départ, les poids sont choisis au hasard. Le réseau se <strong>trompe</strong> souvent. Mais à chaque erreur, il ajuste un peu ses poids pour faire mieux la prochaine fois. Après des milliers d'exemples, il devient très performant !</p>
+          <p>
+            L'apprentissage se passe <strong>avant</strong> que tu utilises l'IA.
+            On lui montre des milliers d'exemples (des photos de chats et de chiens).
+            À chaque erreur, on ajuste un peu ses <strong>poids</strong> pour qu'elle
+            fasse mieux la fois suivante. On répète ça des milliers de fois !
+          </p>
           <div class="learning-anim">
-            <div class="la-step" :class="{ active: learnStep >= 1 }">1. Essai → Erreur</div>
+            <div class="la-step" :class="{ active: learnStep >= 1 }">Phase d'apprentissage : Essai → Erreur → Ajuste les poids</div>
+            <div class="la-arrow">↓ (des milliers de fois…)</div>
+            <div class="la-step" :class="{ active: learnStep >= 2 }">Les poids sont fixés — l'IA a fini d'apprendre !</div>
             <div class="la-arrow">↓</div>
-            <div class="la-step" :class="{ active: learnStep >= 2 }">2. Ajuste les poids</div>
-            <div class="la-arrow">↓</div>
-            <div class="la-step" :class="{ active: learnStep >= 3 }">3. Réessaie → Mieux !</div>
+            <div class="la-step" :class="{ active: learnStep >= 3 }">Phase d'utilisation : les poids ne changent plus, l'IA répond !</div>
           </div>
+          <p style="font-size: 13px; color: #6b7280; margin-top: 8px;">
+            💡 Quand tu dessines un chat ici, l'IA <strong>n'apprend pas</strong> de ton dessin.
+            Elle utilise uniquement les poids qu'elle a mémorisés pendant son entraînement.
+          </p>
           <button class="demo-btn" @click="animateLearning">
-            {{ learnStep === 0 ? '▶ Voir l\'apprentissage' : '🔄 Rejouer' }}
+            {{ learnStep === 0 ? '▶ Voir les deux phases' : '🔄 Rejouer' }}
           </button>
         </div>
       </div>
@@ -107,9 +116,9 @@
 
     <!-- Bouton continuer -->
     <div class="continue-section">
-      <p class="continue-hint">Tu as tout compris ? Alors c'est parti pour le simulateur !</p>
+      <p class="continue-hint">Tu as tout compris ?</p>
       <button class="btn-continue" @click="continueToNext">
-        🐱 Essayer le simulateur Chat/Chien →
+        Oui, on continue !
       </button>
     </div>
 

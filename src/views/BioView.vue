@@ -11,38 +11,7 @@
 
     <div class="bio-body">
 
-      <!-- Frise comparative (toujours visible) -->
-      <div class="frise-card card">
-        <h2 class="section-label">📊 Comparaison des neurones</h2>
-        <div class="frise-cards">
-          <div
-              v-for="e in entities"
-              :key="e.name"
-              class="entity-card"
-              :style="`border-top: 4px solid ${e.color}`"
-          >
-            <div class="entity-emoji">{{ e.emoji }}</div>
-            <div class="entity-name">{{ e.name }}</div>
-            <div class="entity-count" :style="`color: ${e.color}`">{{ e.neurons }}</div>
-            <div class="entity-skill">{{ e.skill }}</div>
-          </div>
-        </div>
 
-        <!-- Barres logarithmiques -->
-        <div class="bars-section">
-          <p class="bars-label">Echelle logarithmique (x 1 000 par graduation)</p>
-          <div v-for="e in entities" :key="e.name + '-bar'" class="bar-row">
-            <span class="bar-emoji">{{ e.emoji }}</span>
-            <div class="bar-track">
-              <div
-                  class="bar-fill"
-                  :style="`width: ${e.logPct}%; background: ${e.color}`"
-              />
-            </div>
-            <span class="bar-count">{{ e.neurons }}</span>
-          </div>
-        </div>
-      </div>
 
       <!-- Jeu d'association -->
       <div class="game-card card">
@@ -63,11 +32,11 @@
               <h3 class="continue-title">Bravo, tu connais les neurones !</h3>
               <p class="continue-sub">
                 Maintenant on va plonger dans le fonctionnement d'une IA qui analyse des images.
-                Pret(e) pour les mini-jeux ?
+                Pret(e) pour dessiner ?
               </p>
             </div>
             <button class="btn-continue" @click="continueToNext">
-              🎮 Jouer aux mini-jeux →
+              ✏️ Passer au dessin →
             </button>
           </div>
         </div>
@@ -91,7 +60,7 @@ const RAW = [
   { name: 'Fourmi', emoji: '🐜', color: '#6BCB77', neurons: '250 000',      neuronsRaw: 250000,      skill: 'construit des galeries complexes' },
   { name: 'Chien',  emoji: '🐶', color: '#FF9F43', neurons: '530 millions', neuronsRaw: 530000000,   skill: 'reconnait les emotions humaines'  },
   { name: 'Humain', emoji: '🧑', color: '#4ECDC4', neurons: '86 milliards', neuronsRaw: 86000000000, skill: 'parle, cree et imagine'           },
-  { name: 'IA',     emoji: '🤖', color: '#A78BFA', neurons: '~1 000',       neuronsRaw: 1000,        skill: 'reconnait des chiffres dessines'  },
+  { name: 'IA',     emoji: '🤖', color: '#A78BFA', neurons: '~2 000',       neuronsRaw: 1000,        skill: 'reconnait des dessins'  },
 ]
 
 const logMin = Math.log10(Math.min(...RAW.map(e => e.neuronsRaw)))

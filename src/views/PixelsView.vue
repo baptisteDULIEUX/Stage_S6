@@ -65,23 +65,14 @@
         </div>
       </div>
 
-      <!-- Étape 3 : transition vers le dessin -->
-      <div class="step-card card" :class="{ visible: visibleSteps >= 3 }">
-        <div class="step-num" style="background:#FF6B6B">3</div>
-        <div class="step-body">
-          <h2 class="step-title">🐱🐶 Du simulateur au dessin</h2>
-          <p>Dans le simulateur, tu as vu un réseau regarder <strong>3 indices</strong> (moustaches, oreilles, yeux). Dans le prochain module, le réseau va regarder une image entière pour deviner si c'est un chat ou un chien !</p>
-          <p>Le principe est <strong>exactement le même</strong> — juste beaucoup plus de chiffres à analyser !</p>
-        </div>
-      </div>
 
     </div>
 
     <!-- Continuer -->
     <div class="continue-section">
-      <p class="continue-hint">Prêt à dessiner un chat ou un chien pour que l'IA le devine ?</p>
+      <p class="continue-hint">Prêt/e à tester l'IA ?</p>
       <button class="btn-continue" @click="continueToNext">
-        ✏️ Dessiner et tester l'IA →
+        Oui, allons-y  →
       </button>
     </div>
 

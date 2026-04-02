@@ -3,13 +3,13 @@ import { ref } from 'vue'
 
 // ─── Définition du parcours ───────────────────────────────────────────────────
 // L'ordre ici est la loi. Chaque étape débloque la suivante.
+// "games" est désormais la dernière étape : elle regroupe mini-jeux + dessin IA.
 export const JOURNEY = [
     { id: 'intro',     route: '/intro',     label: "C'est quoi ?", emoji: '📖', color: '#FF6B6B' },
     { id: 'pixels',    route: '/pixels',    label: 'Les pixels',   emoji: '🖼️', color: '#FF9F43' },
     { id: 'simulator', route: '/simulator', label: 'Simulateur',   emoji: '🐾', color: '#4ECDC4' },
     { id: 'bio',       route: '/bio',       label: 'Biologie',     emoji: '🔬', color: '#6BCB77' },
-    { id: 'mnist',     route: '/mnist',     label: 'Dessine !',    emoji: '✏️', color: '#4D96FF' },
-    { id: 'games',     route: '/games',     label: 'Mini-jeux',    emoji: '🎮', color: '#A78BFA' },
+    { id: 'games',     route: '/games',     label: 'Jeux & Dessin',emoji: '🎨', color: '#A78BFA' },
 ]
 
 const STORAGE_KEY = 'neuralkids-progress'
@@ -41,7 +41,7 @@ export const useProgressStore = defineStore('progress', () => {
         return idx === -1 ? JOURNEY.length - 1 : idx
     }
 
-    // ── Écriture ───────────────────────────────────────────────────────────────
+    // ── Ecriture ───────────────────────────────────────────────────────────────
 
     /** Marque une étape comme complétée et sauvegarde */
     function completeStep(id) {

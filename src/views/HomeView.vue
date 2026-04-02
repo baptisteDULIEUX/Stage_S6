@@ -3,28 +3,15 @@
     <!-- ── Hero ── -->
     <section class="hero">
       <div class="hero-emoji">🧠</div>
-      <h1 class="hero-title">NeuralKids</h1>
+      <h1 class="hero-title">Bienvenue </h1>
       <p class="hero-subtitle">
-        Bienvenue dans le monde des réseaux de neurones !<br />
+        dans le monde des réseaux de neurones !<br />
         Tu vas <strong>voir</strong>, <strong>jouer</strong> et <strong>comprendre</strong>
         comment une IA apprend à reconnaître des chats et des chiens 🐱🐶
       </p>
       <RouterLink to="/intro" class="btn btn-primary hero-cta">
         🚀 Commencer l'aventure !
       </RouterLink>
-    </section>
-
-    <!-- ── Étapes du parcours ── -->
-    <section class="steps-section card">
-      <h2 class="section-title">📍 Le parcours</h2>
-      <div class="steps">
-        <div v-for="(step, i) in JOURNEY" :key="step.id" class="step-item">
-          <div class="step-num" :style="{ background: step.color }">{{ i + 1 }}</div>
-          <div class="step-emoji">{{ step.emoji }}</div>
-          <h4>{{ step.label }}</h4>
-          <div v-if="i < JOURNEY.length - 1" class="step-arrow">→</div>
-        </div>
-      </div>
     </section>
   </div>
 </template>

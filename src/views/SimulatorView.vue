@@ -76,16 +76,24 @@
               </div>
             </div>
 
+            <!-- Pont narratif — affiché uniquement à la dernière manche -->
+            <div v-if="store.currentRoundIndex === ROUNDS.length - 1" class="bio-bridge">
+              <p class="bridge-text">
+                🧠 Ce réseau avait <strong>10 neurones</strong> pour reconnaître un chat ou un chien.
+                Tu sais combien en possède un vrai cerveau humain ?
+              </p>
+            </div>
+
             <div class="popup-actions-row">
               <button class="btn btn-ghost" @click="closeResultPopup">👀 Observer le graphe</button>
               <template v-if="store.currentRoundIndex < ROUNDS.length - 1">
-                    <button class="btn btn-primary" @click="handleNext">
-                      Manche suivante ➔
-                    </button>
+                <button class="btn btn-primary" @click="handleNext">
+                  Manche suivante ➔
+                </button>
               </template>
               <template v-else>
                 <button class="btn btn-teal" @click="continueToNext">
-                🔬 Découvrir la biologie →
+                  🔬 Découvrir la réponse →
                 </button>
               </template>
             </div>
@@ -423,4 +431,18 @@ const resultExplication = computed(() => {
 /* Transitions */
 .fade-enter-active, .fade-leave-active { transition: opacity 0.2s, transform 0.2s; }
 .fade-enter-from, .fade-leave-to { opacity: 0; transform: scale(0.95); }
+
+.bio-bridge {
+  background: #f0fdf4;
+  border: 1.5px solid #86efac;
+  border-radius: 14px;
+  padding: 14px 18px;
+  margin-bottom: 16px;
+  text-align: center;
+}
+.bridge-text {
+  font-size: 15px;
+  color: #166534;
+  line-height: 1.6;
+}
 </style>
