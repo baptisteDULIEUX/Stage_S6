@@ -134,9 +134,9 @@
             </div>
             <div class="visual-op">=</div>
             <div class="visual-box" style="border-color:#FF6B6B22">
-              <div class="visual-label">Résultat 2×2</div>
-              <div class="mini-grid grid-2">
-                <div v-for="(v,i) in ['?','?','?','?']" :key="'r'+i" class="mini-cell res">{{v}}</div>
+              <div class="visual-label">Résultat 3×3</div>
+              <div class="mini-grid grid-3">
+                <div v-for="(v,i) in ['?','?','?','?','?','?','?','?','?']" :key="'r'+i" class="mini-cell res">{{v}}</div>
               </div>
             </div>
           </div>
@@ -270,12 +270,12 @@ import PredictionBars  from '../components/PredictionBars.vue'
 import ConvolutionGame from '../components/ConvolutionGame.vue'
 import MaxPoolingGame  from '../components/MaxPoolingGame.vue'
 import ReluGame        from '../components/ReluGame.vue'
-import { useMnistModel }    from '../composables/useMnistModel.js'
+import { useDoodleModel }    from '../composables/useDoodleModel.js'
 import { useProgressStore } from '../stores/progress.js'
 
 const router   = useRouter()
 const progress = useProgressStore()
-const model    = useMnistModel()
+const model    = useDoodleModel()
 const drawingCanvas = ref(null)
 
 onMounted(async () => {

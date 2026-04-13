@@ -60,8 +60,7 @@ const RAW = [
   { name: 'Fourmi', emoji: '🐜', color: '#6BCB77', neurons: '250 000',      neuronsRaw: 250000,      skill: 'construit des galeries complexes' },
   { name: 'Chien',  emoji: '🐶', color: '#FF9F43', neurons: '530 millions', neuronsRaw: 530000000,   skill: 'reconnait les emotions humaines'  },
   { name: 'Humain', emoji: '🧑', color: '#4ECDC4', neurons: '86 milliards', neuronsRaw: 86000000000, skill: 'parle, cree et imagine'           },
-  { name: 'IA',     emoji: '🤖', color: '#A78BFA', neurons: '~2 000',       neuronsRaw: 1000,        skill: 'reconnait des dessins'  },
-]
+  { name: 'ChatGPT', emoji: '🤖', color: '#A78BFA', neurons: '~175 milliards', neuronsRaw: 175000000000, skill: 'génère du texte et répond aux questions' }]
 
 const logMin = Math.log10(Math.min(...RAW.map(e => e.neuronsRaw)))
 const logMax = Math.log10(Math.max(...RAW.map(e => e.neuronsRaw)))

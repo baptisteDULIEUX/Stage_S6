@@ -11,7 +11,7 @@ const LAYER_NAMES = {
   flatten: 'flatten_1',
 }
 
-export function useMnistModel() {
+export function useDoodleModel() {
   // 2. Remplace ref par shallowRef pour le modèle
   const model       = shallowRef(null)
 

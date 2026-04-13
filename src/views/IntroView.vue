@@ -42,7 +42,18 @@
         <div class="step-num">2</div>
         <div class="step-body">
           <h2 class="step-title">🤖 Le neurone artificiel</h2>
-          <p>Un neurone artificiel fait la même chose, mais avec des <strong>nombres</strong>. Il reçoit des valeurs, les multiplie par des <strong>poids</strong> (l'importance de chaque signal), les additionne, et s'active si le total dépasse un seuil.</p>
+          <p>
+            Un neurone artificiel fait la même chose, mais avec des <strong>nombres</strong>.
+            Il reçoit des valeurs, les multiplie par des <strong>poids</strong>
+            (qui représentent l'importance de chaque signal), puis les additionne pour
+            obtenir un score.
+          </p>
+          <p>
+            Ce score est ensuite comparé à un <strong>seuil</strong> : une valeur limite
+            fixée à l'avance. Si le score dépasse ce seuil, le neurone
+            s'<strong>active</strong> et transmet un signal à la couche suivante.
+            Sinon, il reste silencieux.
+          </p>
           <div class="formula-box">
             <div class="formula">
               <span class="f-val">entrée × poids</span>
@@ -63,7 +74,7 @@
         <div class="step-num">3</div>
         <div class="step-body">
           <h2 class="step-title">🕸️ Un réseau de neurones</h2>
-          <p>On connecte des dizaines, des milliers, des millions de neurones en couches. Les premières couches détectent des <strong>détails simples</strong> (une ligne, une courbe). Les suivantes assemblent ces détails pour reconnaître des formes plus complexes.</p>
+          <p>On connecte des dizaines, des milliers, des millions de neurones en couches. Dans le cas de la reconnaissance d'un chat ou d'un chien, les premières couches détectent des <strong>détails simples</strong> (une ligne, une courbe). Les suivantes assemblent ces détails pour reconnaître des formes plus complexes.</p>
           <div class="network-schema">
             <div class="ns-layer">
               <div class="ns-label">Entrées</div>
@@ -91,9 +102,17 @@
           <h2 class="step-title">📚 Comment ça apprend ?</h2>
           <p>
             L'apprentissage se passe <strong>avant</strong> que tu utilises l'IA.
-            On lui montre des milliers d'exemples (des photos de chats et de chiens).
-            À chaque erreur, on ajuste un peu ses <strong>poids</strong> pour qu'elle
-            fasse mieux la fois suivante. On répète ça des milliers de fois !
+            Au départ, les poids de chaque connexion sont choisis <strong>au hasard</strong>.
+            On montre alors au réseau des milliers d'exemples (des photos de chats et de
+            chiens étiquetées). À chaque erreur, les poids sont légèrement ajustés pour
+            que le réseau fasse mieux la prochaine fois. On répète cela des milliers de
+            fois jusqu'à ce que le réseau soit suffisamment précis.
+          </p>
+          <p>
+            Une fois l'entraînement terminé, les poids sont <strong>fixés</strong> :
+            le réseau n'apprend plus. Quand tu dessines un chat ici, l'IA utilise
+            uniquement les poids qu'elle a mémorisés pendant son entraînement —
+            elle ne s'améliore pas à partir de ton dessin.
           </p>
           <div class="learning-anim">
             <div class="la-step" :class="{ active: learnStep >= 1 }">Phase d'apprentissage : Essai → Erreur → Ajuste les poids</div>
@@ -102,13 +121,6 @@
             <div class="la-arrow">↓</div>
             <div class="la-step" :class="{ active: learnStep >= 3 }">Phase d'utilisation : les poids ne changent plus, l'IA répond !</div>
           </div>
-          <p style="font-size: 13px; color: #6b7280; margin-top: 8px;">
-            💡 Quand tu dessines un chat ici, l'IA <strong>n'apprend pas</strong> de ton dessin.
-            Elle utilise uniquement les poids qu'elle a mémorisés pendant son entraînement.
-          </p>
-          <button class="demo-btn" @click="animateLearning">
-            {{ learnStep === 0 ? '▶ Voir les deux phases' : '🔄 Rejouer' }}
-          </button>
         </div>
       </div>
 

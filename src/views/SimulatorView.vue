@@ -102,6 +102,62 @@
       </Transition>
     </Teleport>
 
+    <!-- ── Écran d'introduction ── -->
+    <div v-if="showIntro" class="sim-intro card">
+
+      <div class="si-header">
+        <h1 class="si-title">🐱🐶 Le simulateur Chat / Chien</h1>
+        <p class="si-sub">
+          Tu vas faire fonctionner un vrai réseau de neurones — étape par étape !
+        </p>
+      </div>
+
+      <!-- Explication des couches -->
+      <div class="si-layers">
+        <div class="si-layer" style="border-color:#FF6B6B">
+          <div class="si-layer-icon">📥</div>
+          <h3 class="si-layer-title" style="color:#FF6B6B">Couche d'entrée</h3>
+          <p>Elle reçoit les informations sur l'image : moustaches, oreilles pointues, yeux ronds.
+            Chaque caractéristique vaut <strong>0</strong> (absent) ou <strong>1</strong> (présent).</p>
+        </div>
+        <div class="si-arrow">→</div>
+        <div class="si-layer" style="border-color:#4ECDC4">
+          <div class="si-layer-icon">🧠</div>
+          <h3 class="si-layer-title" style="color:#4ECDC4">Couche cachée</h3>
+          <p>Cinq neurones intermédiaires combinent les entrées grâce à des <strong>poids</strong>.
+            Chaque neurone additionne ses entrées × poids, et s'active si la somme
+            dépasse le <strong>seuil</strong> (ici : 2).</p>
+        </div>
+        <div class="si-arrow">→</div>
+        <div class="si-layer" style="border-color:#FFE66D">
+          <div class="si-layer-icon">🏆</div>
+          <h3 class="si-layer-title" style="color:#f59e0b">Couche de sortie</h3>
+          <p>Deux neurones de sortie — CHAT et CHIEN — reçoivent les points des neurones actifs.
+            Celui qui a le <strong>score le plus élevé</strong> est la prédiction du réseau.</p>
+        </div>
+      </div>
+
+      <!-- Note sur les poids aléatoires -->
+      <div class="si-note">
+        <span class="si-note-icon">⚠️</span>
+        <p>
+          Au départ (manche 1), les poids ont été fixés <strong>au hasard</strong> :
+          le réseau va se tromper. C'est normal — c'est comme ça qu'on voit
+          pourquoi l'apprentissage est indispensable !
+        </p>
+      </div>
+
+      <button class="btn btn-primary si-start" @click="startSimulator">
+        ▶ Lancer le simulateur !
+      </button>
+
+    </div>
+
+    <!-- ── Simulateur (contenu existant inchangé) ── -->
+    <div v-else>
+      <!-- [ tout le contenu actuel de SimulatorView ici, sans modification ] -->
+    </div>
+
     <div class="sim-header">
       <div class="header-titles">
         <h1 class="sim-title">🐱🐶 Simulateur Chat / Chien</h1>
@@ -213,6 +269,8 @@ import {
   INPUT_IDS, HIDDEN_IDS, OUTPUT_IDS,
 } from '../network/catDogNetwork.js'
 
+const showIntro = ref(true)
+function startSimulator() { showIntro.value = false }
 import { useProgressStore } from '../stores/progress.js'
 const progress = useProgressStore()
 import { useRouter } from 'vue-router'
@@ -444,5 +502,60 @@ const resultExplication = computed(() => {
   font-size: 15px;
   color: #166534;
   line-height: 1.6;
+}
+
+.sim-intro {
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+  max-width: 860px;
+  margin: 0 auto;
+}
+
+.si-header { text-align: center; }
+.si-title  { font-family: 'Fredoka One', cursive; font-size: clamp(24px, 4vw, 38px); margin-bottom: 8px; }
+.si-sub    { font-size: 16px; color: #4b5563; }
+
+/* Couches */
+.si-layers {
+  display: flex;
+  align-items: stretch;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.si-layer {
+  flex: 1;
+  min-width: 180px;
+  border: 2px solid #e5e7eb;
+  border-radius: 16px;
+  padding: 20px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.si-layer-icon  { font-size: 36px; text-align: center; }
+.si-layer-title { font-family: 'Fredoka One', cursive; font-size: 17px; margin: 0; text-align: center; }
+.si-layer p     { font-size: 13px; color: #4b5563; line-height: 1.7; margin: 0; }
+.si-arrow       { font-size: 28px; color: #d1d5db; display: flex; align-items: center; flex-shrink: 0; }
+
+/* Note poids aléatoires */
+.si-note {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  background: #fffbeb;
+  border: 1.5px solid #fcd34d;
+  border-radius: 14px;
+  padding: 16px;
+}
+.si-note-icon { font-size: 24px; flex-shrink: 0; }
+.si-note p    { font-size: 14px; color: #374151; line-height: 1.7; margin: 0; }
+
+/* Bouton start */
+.si-start {
+  font-size: 20px;
+  padding: 16px 48px;
+  align-self: center;
+  box-shadow: 0 8px 24px rgba(255,107,107,0.3);
 }
 </style>

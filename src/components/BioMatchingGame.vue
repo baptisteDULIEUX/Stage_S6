@@ -128,7 +128,7 @@ const PAIRS = [
   { id: 0, emoji: '🐜', name: 'Fourmi',  neurons: '250 000 neurones',        skill: 'construit des galeries complexes' },
   { id: 1, emoji: '🐶', name: 'Chien',   neurons: '530 millions de neurones', skill: 'reconnaît les émotions humaines'  },
   { id: 2, emoji: '🧑', name: 'Humain',  neurons: '86 milliards de neurones', skill: 'parle, crée et imagine'           },
-  { id: 3, emoji: '🤖', name: 'IA',      neurons: '~2 000 neurones',          skill: 'reconnaît des dessins'  },
+  { id: 3, emoji: '🤖', name: 'ChatGPT', neurons: '~175 milliards de neurones', skill: 'génère du texte et répond aux questions' },
 ]
 
 // ─── État ─────────────────────────────────────────────────────────────────────
