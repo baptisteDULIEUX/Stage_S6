@@ -79,8 +79,8 @@
             <!-- Pont narratif — affiché uniquement à la dernière manche -->
             <div v-if="store.currentRoundIndex === ROUNDS.length - 1" class="bio-bridge">
               <p class="bridge-text">
-                🧠 Ce réseau avait <strong>10 neurones</strong> pour reconnaître un chat ou un chien.
-                Tu sais combien en possède un vrai cerveau humain ?
+                🖼️ Maintenant que tu comprends comment un réseau prend une décision,
+                découvre comment une IA analyse une vraie image pixel par pixel !
               </p>
             </div>
 
@@ -93,7 +93,7 @@
               </template>
               <template v-else>
                 <button class="btn btn-teal" @click="continueToNext">
-                  🔬 Découvrir la réponse →
+                  🖼️ Comment l'IA voit une image →
                 </button>
               </template>
             </div>
@@ -163,16 +163,40 @@
         <h1 class="sim-title">🐱🐶 Simulateur Chat / Chien</h1>
       </div>
       <div class="round-selector">
-        <button
-            v-for="(r, i) in ROUNDS"
-            :key="r.id"
-            class="round-pill"
-            :class="{ active: store.currentRoundIndex === i }"
-            :style="store.currentRoundIndex === i ? `background: ${r.color}` : ''"
-            @click="store.goToRound(i)"
-        >
-          M{{ r.id }}
-        </button>
+
+        <!-- Groupe 1 : Avant l'apprentissage (Manche 1) -->
+        <div class="round-group">
+          <span class="round-group-label avant">⚠️ Avant l'apprentissage</span>
+          <button
+              class="round-pill avant-pill"
+              :class="{ active: store.currentRoundIndex === 0 }"
+              :style="store.currentRoundIndex === 0 ? `background: ${ROUNDS[0].color}` : ''"
+              @click="store.goToRound(0)"
+          >
+            Manche 1
+          </button>
+        </div>
+
+        <!-- Séparateur -->
+        <div class="round-separator">→</div>
+
+        <!-- Groupe 2 : Après l'apprentissage (Manches 2, 3, 4) -->
+        <div class="round-group">
+          <span class="round-group-label apres">✅ Après l'apprentissage</span>
+          <div class="round-group-pills">
+            <button
+                v-for="(r, i) in ROUNDS.slice(1)"
+                :key="r.id"
+                class="round-pill apres-pill"
+                :class="{ active: store.currentRoundIndex === i + 1 }"
+                :style="store.currentRoundIndex === i + 1 ? `background: ${r.color}` : ''"
+                @click="store.goToRound(i + 1)"
+            >
+              Manche {{ r.id }}
+            </button>
+          </div>
+        </div>
+
       </div>
     </div>
 
@@ -387,15 +411,71 @@ const resultExplication = computed(() => {
 }
 .sim-title { font-family: 'Fredoka One', cursive; font-size: 28px; margin: 0; }
 
-.round-selector { display: flex; gap: 8px; }
-.round-pill {
-  font-family: 'Fredoka One', cursive; font-size: 14px;
-  padding: 6px 16px; border-radius: 50px;
-  border: 2px solid #e5e7eb; background: #fff; color: #374151;
-  cursor: pointer;
+.round-selector {
+  display: flex;
+  align-items: flex-start;  /* aligne les groupes en haut */
+  gap: 10px;
+  flex-wrap: wrap;
 }
+
+.round-group {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+
+.round-group-label {
+  font-family: 'Nunito', sans-serif;
+  font-size: 10px;
+  font-weight: 800;
+  padding: 2px 10px;
+  border-radius: 50px;
+  white-space: nowrap;
+}
+.round-group-label.avant {
+  background: #fff5f5;
+  color: #dc2626;
+  border: 1.5px solid #fca5a5;
+}
+.round-group-label.apres {
+  background: #f0fdf4;
+  color: #16a34a;
+  border: 1.5px solid #86efac;
+}
+
+.round-group-pills {
+  display: flex;
+  gap: 6px;
+}
+
+.round-pill {
+  font-family: 'Fredoka One', cursive;
+  font-size: 13px;
+  padding: 6px 14px;
+  border-radius: 50px;
+  border: 2px solid #e5e7eb;
+  background: #fff;
+  color: #374151;
+  cursor: pointer;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+.round-pill:hover { border-color: #9ca3af; }
 .round-pill.active { color: #fff; border-color: transparent; }
 
+.avant-pill { border-color: #fca5a5; }
+.avant-pill:not(.active) { color: #dc2626; background: #fff5f5; }
+
+.apres-pill { border-color: #86efac; }
+.apres-pill:not(.active) { color: #16a34a; background: #f0fdf4; }
+
+.round-separator {
+  font-size: 20px;
+  color: #d1d5db;
+  flex-shrink: 0;
+  margin-top: 14px;         /* aligné avec le milieu des boutons */
+}
 .sim-body-compact {
   display: grid;
   grid-template-columns: 240px 1fr 240px;

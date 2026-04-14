@@ -5,6 +5,7 @@ import PixelsView    from '../views/PixelsView.vue'
 import SimulatorView from '../views/SimulatorView.vue'
 import BioView       from '../views/BioView.vue'
 import GamesView     from '../views/GamesView.vue'
+import RecapView    from '../views/RecapView.vue'
 
 // MnistView supprimé : le module dessin est intégré dans GamesView
 
@@ -38,6 +39,12 @@ const routes = [
     name: 'bio',
     component: BioView,
     meta: { title: 'Parallèle biologique', stepId: 'bio', inJourney: true },
+  },
+  {
+    path: '/recap',
+    name: 'recap',
+    component: RecapView,
+    meta: { title: 'Récapitulatif', inJourney: false },
   },
   {
     path: '/games',

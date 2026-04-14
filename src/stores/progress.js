@@ -5,11 +5,11 @@ import { ref } from 'vue'
 // L'ordre ici est la loi. Chaque étape débloque la suivante.
 // "games" est désormais la dernière étape : elle regroupe mini-jeux + dessin IA.
 export const JOURNEY = [
-    { id: 'intro',     route: '/intro',     label: "C'est quoi ?", emoji: '📖', color: '#FF6B6B' },
-    { id: 'pixels',    route: '/pixels',    label: 'Les pixels',   emoji: '🖼️', color: '#FF9F43' },
-    { id: 'simulator', route: '/simulator', label: 'Simulateur',   emoji: '🐾', color: '#4ECDC4' },
-    { id: 'bio',       route: '/bio',       label: 'Biologie',     emoji: '🔬', color: '#6BCB77' },
-    { id: 'games',     route: '/games',     label: 'Jeux & Dessin',emoji: '🎨', color: '#A78BFA' },
+    { id: 'intro',     route: '/intro',     label: "Comment ça fonctionne un neurone ?", emoji: '📖', color: '#FF6B6B' },
+    { id: 'simulator', route: '/simulator', label: 'Comment reconnaitre un chien d\'un chat ?',   emoji: '🐾', color: '#4ECDC4' },
+    { id: 'pixels',    route: '/pixels',    label: 'Comment un ordinateur lit une image ?',   emoji: '🖼️', color: '#FF9F43' },
+    { id: 'games',     route: '/games',     label: 'Viens apprendre en jouant',emoji: '🎨', color: '#A78BFA' },
+    { id: 'bio',       route: '/bio',       label: 'Comment ça marche dans la nature ?',     emoji: '🔬', color: '#6BCB77' },
 ]
 
 const STORAGE_KEY = 'neuralkids-progress'

@@ -254,7 +254,7 @@
           </p>
         </div>
         <button class="btn-finish" @click="continueToNext">
-          ✅ Terminer le parcours !
+          Et dans la nature ça fonctionne comment ?
         </button>
       </div>
     </div>
@@ -291,7 +291,7 @@ async function onDrawn(canvas28) {
 
 function continueToNext() {
   progress.completeStep('games')
-  router.push('/')
+  router.push(progress.nextRoute('games'))
 }
 </script>
 

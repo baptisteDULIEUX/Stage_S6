@@ -36,7 +36,7 @@
               </p>
             </div>
             <button class="btn-continue" @click="continueToNext">
-              ✏️ Passer au dessin →
+              Terminer le parcours
             </button>
           </div>
         </div>
@@ -80,7 +80,7 @@ function onGameComplete() {
 // -- Navigation ---------------------------------------------------------------
 function continueToNext() {
   progress.completeStep('bio')
-  router.push(progress.nextRoute('bio'))
+  router.push('/recap')
 }
 </script>
 
