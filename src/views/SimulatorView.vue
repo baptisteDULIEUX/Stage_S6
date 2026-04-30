@@ -155,132 +155,132 @@
 
     <!-- ── Simulateur (contenu existant inchangé) ── -->
     <div v-else>
-      <!-- [ tout le contenu actuel de SimulatorView ici, sans modification ] -->
-    </div>
-
-    <div class="sim-header">
-      <div class="header-titles">
-        <h1 class="sim-title">🐱🐶 Simulateur Chat / Chien</h1>
-      </div>
-      <div class="round-selector">
-
-        <!-- Groupe 1 : Avant l'apprentissage (Manche 1) -->
-        <div class="round-group">
-          <span class="round-group-label avant">⚠️ Avant l'apprentissage</span>
-          <button
-              class="round-pill avant-pill"
-              :class="{ active: store.currentRoundIndex === 0 }"
-              :style="store.currentRoundIndex === 0 ? `background: ${ROUNDS[0].color}` : ''"
-              @click="store.goToRound(0)"
-          >
-            Manche 1
-          </button>
+      <div class="sim-header">
+        <div class="header-titles">
+          <h1 class="sim-title">🐱🐶 Simulateur Chat / Chien</h1>
         </div>
+        <div class="round-selector">
 
-        <!-- Séparateur -->
-        <div class="round-separator">→</div>
-
-        <!-- Groupe 2 : Après l'apprentissage (Manches 2, 3, 4) -->
-        <div class="round-group">
-          <span class="round-group-label apres">✅ Après l'apprentissage</span>
-          <div class="round-group-pills">
+          <!-- Groupe 1 : Avant l'apprentissage (Manche 1) -->
+          <div class="round-group">
+            <span class="round-group-label avant">⚠️ Avant l'apprentissage</span>
             <button
-                v-for="(r, i) in ROUNDS.slice(1)"
-                :key="r.id"
-                class="round-pill apres-pill"
-                :class="{ active: store.currentRoundIndex === i + 1 }"
-                :style="store.currentRoundIndex === i + 1 ? `background: ${r.color}` : ''"
-                @click="store.goToRound(i + 1)"
+                class="round-pill avant-pill"
+                :class="{ active: store.currentRoundIndex === 0 }"
+                :style="store.currentRoundIndex === 0 ? `background: ${ROUNDS[0].color}` : ''"
+                @click="store.goToRound(0)"
             >
-              Manche {{ r.id }}
+              Manche 1
             </button>
           </div>
-        </div>
 
+          <!-- Séparateur -->
+          <div class="round-separator">→</div>
+
+          <!-- Groupe 2 : Après l'apprentissage (Manches 2, 3, 4) -->
+          <div class="round-group">
+            <span class="round-group-label apres">✅ Après l'apprentissage</span>
+            <div class="round-group-pills">
+              <button
+                  v-for="(r, i) in ROUNDS.slice(1)"
+                  :key="r.id"
+                  class="round-pill apres-pill"
+                  :class="{ active: store.currentRoundIndex === i + 1 }"
+                  :style="store.currentRoundIndex === i + 1 ? `background: ${r.color}` : ''"
+                  @click="store.goToRound(i + 1)"
+              >
+                Manche {{ r.id }}
+              </button>
+            </div>
+          </div>
+
+        </div>
       </div>
-    </div>
 
-    <div class="sim-body-compact">
+      <div class="sim-body-compact">
 
-      <aside class="column side-col">
-        <div class="image-card card" :style="`border-top: 5px solid ${round.color}`">
-          <div class="animal-display">{{ round.cardEmoji }}</div>
-          <div class="animal-label">{{ round.cardLabel }}</div>
-          <div class="round-title">{{ round.title }}</div>
-        </div>
+        <aside class="column side-col">
+          <div class="image-card card" :style="`border-top: 5px solid ${round.color}`">
+            <div class="animal-display">{{ round.cardEmoji }}</div>
+            <div class="animal-label">{{ round.cardLabel }}</div>
+            <div class="round-title">{{ round.title }}</div>
+          </div>
 
-        <div class="inputs-card card flex-fill">
-          <h3 class="section-label">📥 Entrées
-            <span v-if="!store.result" class="toggle-hint">← clique !</span>
-          </h3>
-          <div class="input-rows">
-            <div
-                v-for="id in INPUT_IDS" :key="id"
-                class="input-row"
-                :class="{ 'input-active': userInputs[id] === 1, 'input-clickable': !store.result }"
-                :style="userInputs[id] === 1 ? `border-color: ${NODES[id].color}; background: ${NODES[id].color}18` : ''"
-                @click="!store.result && toggleInput(id)"
-            >
-              <span class="input-emoji">{{ NODES[id].emoji }}</span>
-              <span class="input-name">{{ NODES[id].label }}</span>
-              <span class="input-badge" :style="userInputs[id] === 1 ? `background: ${NODES[id].color}` : 'background:#e5e7eb; color:#374151'">
+          <div class="inputs-card card flex-fill">
+            <h3 class="section-label">📥 Entrées
+              <span v-if="!store.result" class="toggle-hint">← clique !</span>
+            </h3>
+            <div class="input-rows">
+              <div
+                  v-for="id in INPUT_IDS" :key="id"
+                  class="input-row"
+                  :class="{ 'input-active': userInputs[id] === 1, 'input-clickable': !store.result }"
+                  :style="userInputs[id] === 1 ? `border-color: ${NODES[id].color}; background: ${NODES[id].color}18` : ''"
+                  @click="!store.result && toggleInput(id)"
+              >
+                <span class="input-emoji">{{ NODES[id].emoji }}</span>
+                <span class="input-name">{{ NODES[id].label }}</span>
+                <span class="input-badge" :style="userInputs[id] === 1 ? `background: ${NODES[id].color}` : 'background:#e5e7eb; color:#374151'">
                 {{ userInputs[id] }}
               </span>
+              </div>
+            </div>
+          </div>
+        </aside>
+
+        <div class="column graph-col">
+          <div class="graph-card card">
+            <div class="graph-wrapper-inner">
+              <NeuronGraph
+                  :layer-order="LAYER_ORDER"
+                  :nodes="NODES"
+                  :connections="CONNECTIONS"
+                  :weights="store.currentWeights"
+                  :node-states="graphNodeStates"
+                  :threshold="2"
+                  :can-toggle="!store.result"
+                  :svg-width="600"
+                  :svg-height="550"
+                  @toggle-input="toggleInput"
+              />
+            </div>
+
+            <div class="controls">
+              <button class="btn btn-ghost" :disabled="store.currentRoundIndex === 0" @click="store.goToRound(store.currentRoundIndex - 1)">← Prec</button>
+              <button class="btn btn-primary" :disabled="!!store.result" @click="handleCompute">
+                {{ store.result ? '✅ Calculé' : '▶ Calculer !' }}
+              </button>
+              <button class="btn btn-ghost" :disabled="!store.result" @click="handleReset">🔄 Reset</button>
+              <button class="btn btn-teal" :disabled="store.currentRoundIndex === ROUNDS.length - 1" @click="store.goToRound(store.currentRoundIndex + 1)">Suiv →</button>
             </div>
           </div>
         </div>
-      </aside>
 
-      <div class="column graph-col">
-        <div class="graph-card card">
-          <div class="graph-wrapper-inner">
-            <NeuronGraph
-                :layer-order="LAYER_ORDER"
-                :nodes="NODES"
-                :connections="CONNECTIONS"
-                :weights="store.currentWeights"
-                :node-states="graphNodeStates"
-                :threshold="2"
-                :can-toggle="!store.result"
-                :svg-width="600"
-                :svg-height="550"
-                @toggle-input="toggleInput"
-            />
-          </div>
-
-          <div class="controls">
-            <button class="btn btn-ghost" :disabled="store.currentRoundIndex === 0" @click="store.goToRound(store.currentRoundIndex - 1)">← Prec</button>
-            <button class="btn btn-primary" :disabled="!!store.result" @click="handleCompute">
-              {{ store.result ? '✅ Calculé' : '▶ Calculer !' }}
-            </button>
-            <button class="btn btn-ghost" :disabled="!store.result" @click="handleReset">🔄 Reset</button>
-            <button class="btn btn-teal" :disabled="store.currentRoundIndex === ROUNDS.length - 1" @click="store.goToRound(store.currentRoundIndex + 1)">Suiv →</button>
-          </div>
-        </div>
-      </div>
-
-      <aside class="column side-col">
-        <div class="hidden-card card flex-fill">
-          <h3 class="section-label">🧠 Neurones cachés</h3>
-          <div class="hidden-rows">
-            <div
-                v-for="id in HIDDEN_IDS" :key="id"
-                class="hidden-row"
-                :class="{
+        <aside class="column side-col">
+          <div class="hidden-card card flex-fill">
+            <h3 class="section-label">🧠 Neurones cachés</h3>
+            <div class="hidden-rows">
+              <div
+                  v-for="id in HIDDEN_IDS" :key="id"
+                  class="hidden-row"
+                  :class="{
                 'hidden-active': store.result && store.result.nodeStates[id]?.active,
                 'hidden-inactive': store.result && !store.result.nodeStates[id]?.active,
               }"
-            >
-              <span class="hidden-label">{{ id }}</span>
-              <span class="hidden-sum" v-if="store.result">Σ = {{ store.result.nodeStates[id]?.sum }}</span>
-              <span class="hidden-status" v-if="store.result">{{ store.result.nodeStates[id]?.active ? '⚡ ACTIF' : '💤 inactif' }}</span>
+              >
+                <span class="hidden-label">{{ id }}</span>
+                <span class="hidden-sum" v-if="store.result">Σ = {{ store.result.nodeStates[id]?.sum }}</span>
+                <span class="hidden-status" v-if="store.result">{{ store.result.nodeStates[id]?.active ? '⚡ ACTIF' : '💤 inactif' }}</span>
+              </div>
             </div>
+            <p class="threshold-note">Seuil d'activation : Σ ≥ 2</p>
           </div>
-          <p class="threshold-note">Seuil d'activation : Σ ≥ 2</p>
-        </div>
-      </aside>
+        </aside>
 
+      </div>
     </div>
+
+
   </div>
 </template>
 

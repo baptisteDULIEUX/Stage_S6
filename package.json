@@ -2,20 +2,37 @@
   "name": "neural-kids",
   "version": "0.1.0",
   "description": "Simulateur pédagogique de réseaux de neurones — FEMTO-ST",
+  "main": "main.js",
+  "author": "baptiste DULIEUX",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "start": "electron-forge start",
+    "package": "electron-forge package",
+    "electron:start": "electron .",
+    "electron:make": "electron-forge make"
   },
   "dependencies": {
     "@tensorflow/tfjs": "^4.22.0",
+    "electron-squirrel-startup": "^1.0.1",
     "js-confetti": "^0.13.1",
     "pinia": "^2.1.0",
     "vue": "^3.4.0",
     "vue-router": "^4.3.0"
   },
   "devDependencies": {
+    "@electron-forge/cli": "^7.11.1",
+    "@electron-forge/maker-deb": "^7.11.1",
+    "@electron-forge/maker-rpm": "^7.11.1",
+    "@electron-forge/maker-squirrel": "^7.11.1",
+    "@electron-forge/maker-zip": "^7.11.1",
+    "@electron-forge/plugin-auto-unpack-natives": "^7.11.1",
+    "@electron-forge/plugin-fuses": "^7.11.1",
+    "@electron-forge/plugin-vite": "^7.11.1",
+    "@electron/fuses": "^1.8.0",
     "@vitejs/plugin-vue": "^5.0.0",
+    "electron": "^41.3.0",
     "vite": "^5.2.0"
   }
 }

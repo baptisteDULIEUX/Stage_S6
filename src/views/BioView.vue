@@ -18,7 +18,7 @@
         <h2 class="section-label">🎮 A toi de jouer !</h2>
         <p class="game-intro">
           Maintenant que tu as vu les chiffres, sauras-tu les retrouver ?
-          Associe chaque etre vivant a son nombre de neurones et a sa capacite !
+          Associe chaque être vivant a son nombre de neurones et a sa capacité !
         </p>
         <BioMatchingGame @complete="onGameComplete" />
       </div>
